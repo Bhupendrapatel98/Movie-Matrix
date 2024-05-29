@@ -1,0 +1,30 @@
+name: Android CI/CD
+
+on:
+  push:
+    branches:
+      - master
+      - development
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # - name: Set up Java
+    #   uses: actions/setup-java@v2
+    #   with:
+    #     java-version: '11'
+    #     distribution: 'adopt'
+
+    - name: Build APK
+      run: ./gradlew assembleDebug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
