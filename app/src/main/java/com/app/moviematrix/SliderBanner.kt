@@ -55,7 +55,6 @@ fun SliderBanner() {
             modifier = Modifier
                 .height(180.dp)
                 .fillMaxWidth()
-                .padding(top = 10.dp)
         ) { page ->
             Card(
                 shape = RoundedCornerShape(12.dp),
