@@ -81,13 +81,16 @@ class MainActivity : ComponentActivity() {
                         Text(
                             text = "Trending",
                             color = Color.White,
-                            fontSize = 22.sp,
+                            fontSize = 21.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(5.dp))
-                        Text(text = "Person", color = Color.Gray, fontSize = 18.sp)
+                        Text(text = "Person", color = Color.Gray, fontSize = 16.sp)
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(text = "More", color = Color.Red, fontSize = 16.sp)
                     }
                     TrendingPersonList()
+                    TopRatedTvShow()
                 }
             }
         }
