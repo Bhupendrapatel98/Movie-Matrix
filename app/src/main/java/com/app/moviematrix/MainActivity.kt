@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Scaffold
@@ -52,6 +54,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxHeight()
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Row(
                         modifier = Modifier
@@ -73,6 +76,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.size(32.dp),
                         )
                     }
+
                     SliderBanner()
                     Row(
                         modifier = Modifier.padding(bottom = 10.dp),
@@ -90,6 +94,8 @@ class MainActivity : ComponentActivity() {
                         Text(text = "More", color = Color.Red, fontSize = 16.sp)
                     }
                     TrendingPersonList()
+                    TrendingMovies()
+                    PopularMovies()
                     TopRatedTvShow()
                 }
             }
