@@ -58,6 +58,132 @@ fun TrendingPersonList() {
 
 @Preview
 @Composable
+fun TrendingMovies() {
+    val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 18.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Trending",
+                fontSize = 21.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(Modifier.width(5.dp))
+            Text(text = "Movies", fontSize = 16.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = "More", fontSize = 16.sp, color = Color.Red)
+        }
+        LazyRow(modifier = Modifier.padding(top = 15.dp)) {
+            items(list) { item ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box {
+                        Image(
+                            painter = painterResource(id = R.drawable.person),
+                            contentDescription = "banner Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .padding(horizontal = 5.dp)
+                        )
+                        Text(
+                            text = "8.8",
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 5.dp, end = 8.dp)
+                                .clip(
+                                    CircleShape
+                                )
+                                .background(Color.Black)
+                                .padding(horizontal = 10.dp)
+                                .align(alignment = Alignment.TopEnd)
+                        )
+                    }
+                    Text(
+                        text = item,
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PopularMovies() {
+    val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 18.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "Popular",
+                fontSize = 21.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(Modifier.width(5.dp))
+            Text(text = "Movies", fontSize = 16.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = "More", fontSize = 16.sp, color = Color.Red)
+        }
+        LazyRow(modifier = Modifier.padding(top = 15.dp)) {
+            items(list) { item ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box {
+                        Image(
+                            painter = painterResource(id = R.drawable.person),
+                            contentDescription = "banner Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .padding(horizontal = 5.dp)
+                        )
+                        Text(
+                            text = "8.8",
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 5.dp, end = 8.dp)
+                                .clip(
+                                    CircleShape
+                                )
+                                .background(Color.Black)
+                                .padding(horizontal = 10.dp)
+                                .align(alignment = Alignment.TopEnd)
+                        )
+                    }
+                    Text(
+                        text = item,
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
 fun TopRatedTvShow() {
     val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
     Column(
