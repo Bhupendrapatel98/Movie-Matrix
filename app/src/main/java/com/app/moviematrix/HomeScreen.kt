@@ -42,8 +42,6 @@ fun Home() {
         Header()
         Column(
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
                 .padding(horizontal = 15.dp)
                 .verticalScroll(rememberScrollState())
         ) {
