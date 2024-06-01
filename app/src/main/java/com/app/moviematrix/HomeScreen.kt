@@ -1,6 +1,5 @@
 package com.app.moviematrix
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,31 +9,47 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Shapes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 
 @Preview(showBackground = true)
 @Composable
 fun TrendingPersonList() {
     val itemList = listOf("bhupendra", "Ankit", "yogesh", "Adil", "shefali", "Bandana")
+    Row(
+        modifier = Modifier.padding(bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Trending",
+            color = Color.White,
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(text = "Person", color = Color.Gray, fontSize = 16.sp)
+        Spacer(modifier = Modifier.weight(1f))
+        Text(text = "More", color = Color.Red, fontSize = 16.sp)
+    }
     LazyRow {
         items(itemList) { item ->
             Column(
@@ -56,9 +71,50 @@ fun TrendingPersonList() {
     }
 }
 
+@Composable
+fun Header() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 15.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Movie Stack",
+            color = Color.White,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            Icons.Rounded.Search,
+            contentDescription = "Search",
+            colorFilter = ColorFilter.tint(Color.White),
+            modifier = Modifier.size(32.dp),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun TrendingMovies() {
+    CommonListUI("Trending", "Movies")
+}
+
+@Preview
+@Composable
+fun PopularMovies() {
+    CommonListUI("Popular", "Movies")
+}
+
 @Preview
 @Composable
 fun TopRatedTvShow() {
+    CommonListUI("Top Rated", "Tv Show")
+}
+
+@Composable
+fun CommonListUI(heading: String, title: String) {
     val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
     Column(
         modifier = Modifier
@@ -67,13 +123,13 @@ fun TopRatedTvShow() {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "Top Rated",
+                text = heading,
                 fontSize = 21.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Spacer(Modifier.width(5.dp))
-            Text(text = "Tv Show", fontSize = 16.sp, color = Color.Gray)
+            Text(text = title, fontSize = 16.sp, color = Color.Gray)
             Spacer(modifier = Modifier.weight(1f))
             Text(text = "More", fontSize = 16.sp, color = Color.Red)
         }
