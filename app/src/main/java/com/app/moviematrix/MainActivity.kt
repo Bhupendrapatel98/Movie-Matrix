@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                 when (selectedItem) {
                     0 -> Home()
                     1 -> SearchPage()
-                    2 -> Home()
+                    2 -> MyList(this@MainActivity)
                     3 -> Home()
                 }
             }
