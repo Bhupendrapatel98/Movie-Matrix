@@ -1,6 +1,7 @@
 package com.app.moviematrix
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.Menu
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 
@@ -105,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     0 -> Home()
                     1 -> SearchPage()
                     2 -> MyList(this@MainActivity)
-                    3 -> Home()
+                    3 -> MenuPage()
                 }
             }
 
