@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.daggerhilt)
+    kotlin("kapt")
 }
 
 android {
@@ -69,4 +71,15 @@ dependencies {
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.pager.indicators)
     implementation(libs.navigation.compose)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson.converter)
+    implementation(libs.interceptor)
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.coil.compose)
+    implementation(libs.paging.compose)
+    implementation(libs.gson)
+    implementation(libs.room)
+    kapt(libs.room.compiler)
+    implementation(libs.room.paging)
 }
