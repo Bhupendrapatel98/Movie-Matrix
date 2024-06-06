@@ -48,7 +48,7 @@ fun Home(navigationController: NavController) {
                 .verticalScroll(rememberScrollState())
         ) {
             SliderBanner()
-            TrendingPersonList()
+            TrendingPersonList(navigationController)
             TrendingMovies(navigationController)
             PopularMovies(navigationController)
             TopRatedTvShow(navigationController)
@@ -56,9 +56,8 @@ fun Home(navigationController: NavController) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun TrendingPersonList() {
+fun TrendingPersonList(navigationController: NavController) {
     val itemList = listOf("bhupendra", "Ankit", "yogesh", "Adil", "shefali", "Bandana")
     Row(
         modifier = Modifier.padding(bottom = 10.dp),
@@ -73,7 +72,13 @@ fun TrendingPersonList() {
         Spacer(modifier = Modifier.width(5.dp))
         Text(text = "Person", color = Color.Gray, fontSize = 16.sp)
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = "More", color = Color.Red, fontSize = 16.sp)
+        //Text(text = "More", color = Color.Red, fontSize = 16.sp)
+        ClickableText(
+            text = AnnotatedString("More"),
+            style = TextStyle(color = Color.Red, fontSize = 16.sp),
+            onClick = {
+                navigationController.navigate(MainDestinations.PERSON_LIST)
+            })
     }
     LazyRow {
         items(itemList) { item ->
