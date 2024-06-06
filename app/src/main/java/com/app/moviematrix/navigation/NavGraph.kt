@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.app.moviematrix.AppBottomNavigation
 import com.app.moviematrix.MovieList
+import com.app.moviematrix.PersonList
 
 @Composable
 fun NavGraph(navHostController: NavHostController, context: Context) {
@@ -16,6 +17,9 @@ fun NavGraph(navHostController: NavHostController, context: Context) {
         }
         composable(route = MainDestinations.MOVIE_LIST) {
             MovieList(context = context)
+        }
+        composable(route = MainDestinations.PERSON_LIST) {
+            PersonList(context = context)
         }
     }
 }
