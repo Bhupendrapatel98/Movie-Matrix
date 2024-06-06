@@ -1,13 +1,11 @@
 package com.app.moviematrix
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
@@ -30,14 +29,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import com.app.moviematrix.navigation.MainDestinations
 
 @Composable
-fun Home() {
+fun Home(navigationController: NavController) {
     Column {
         Header()
         Column(
@@ -47,9 +49,9 @@ fun Home() {
         ) {
             SliderBanner()
             TrendingPersonList()
-            TrendingMovies()
-            PopularMovies()
-            TopRatedTvShow()
+            TrendingMovies(navigationController)
+            PopularMovies(navigationController)
+            TopRatedTvShow(navigationController)
         }
     }
 }
@@ -118,26 +120,23 @@ fun Header() {
     }
 }
 
-@Preview
 @Composable
-fun TrendingMovies() {
-    CommonListUI("Trending", "Movies")
-}
-
-@Preview
-@Composable
-fun PopularMovies() {
-    CommonListUI("Popular", "Movies")
-}
-
-@Preview
-@Composable
-fun TopRatedTvShow() {
-    CommonListUI("Top Rated", "Tv Show")
+fun TrendingMovies(navigationController: NavController) {
+    CommonListUI("Trending", "Movies", navigationController)
 }
 
 @Composable
-fun CommonListUI(heading: String, title: String) {
+fun PopularMovies(navigationController: NavController) {
+    CommonListUI("Popular", "Movies", navigationController)
+}
+
+@Composable
+fun TopRatedTvShow(navigationController: NavController) {
+    CommonListUI("Top Rated", "Tv Show", navigationController)
+}
+
+@Composable
+fun CommonListUI(heading: String, title: String, navigationController: NavController) {
     val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
     Column(
         modifier = Modifier
@@ -154,7 +153,13 @@ fun CommonListUI(heading: String, title: String) {
             Spacer(Modifier.width(5.dp))
             Text(text = title, fontSize = 16.sp, color = Color.Gray)
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "More", fontSize = 16.sp, color = Color.Red)
+            //Text(text = "More", fontSize = 16.sp, color = Color.Red)
+            ClickableText(
+                text = AnnotatedString("More"),
+                style = TextStyle(color = Color.Red, fontSize = 16.sp),
+                onClick = {
+                    navigationController.navigate(MainDestinations.MOVIE_LIST)
+                })
         }
         LazyRow(modifier = Modifier.padding(top = 15.dp)) {
             items(list) { item ->
