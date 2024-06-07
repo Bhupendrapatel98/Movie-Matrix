@@ -1,5 +1,7 @@
 package com.app.moviematrix.presentation
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,6 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,9 +39,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
 import com.app.moviematrix.R
+import com.app.moviematrix.data.model.trendingperson.Result
+import com.app.moviematrix.data.model.trendingperson.TrendingPerson
 import com.app.moviematrix.navigation.MainDestinations
+import com.app.moviematrix.utills.Resource
 
 @Composable
 fun Home(navigationController: NavController) {
@@ -48,7 +59,7 @@ fun Home(navigationController: NavController) {
                 .verticalScroll(rememberScrollState())
         ) {
             SliderBanner()
-            TrendingPersonList(navigationController)
+            getTrendingPersonData(navigationController = navigationController)
             TrendingMovies(navigationController)
             PopularMovies(navigationController)
             TopRatedTvShow(navigationController)
@@ -57,8 +68,37 @@ fun Home(navigationController: NavController) {
 }
 
 @Composable
-fun TrendingPersonList(navigationController: NavController) {
-    val itemList = listOf("bhupendra", "Ankit", "yogesh", "Adil", "shefali", "Bandana")
+fun getTrendingPersonData(
+    navigationController: NavController,
+    viewModel: TrendingPersonViewModel = hiltViewModel()
+) {
+
+    val trendingPersonState by viewModel.trendingPersonStateFlow.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getTrendingPerson("c4824776bf6f08433a4c4e7cd75a6acc")
+    }
+
+    when (trendingPersonState) {
+        is Resource.Loading -> {
+            Log.d("Loading", "getTrendingPersonData: ")
+        }
+
+        is Resource.Success -> {
+            val personData = (trendingPersonState as Resource.Success<TrendingPerson>).data.results
+            TrendingPersonList(navigationController, personData)
+        }
+
+        is Resource.Failed -> {
+            val message = (trendingPersonState as Resource.Failed<TrendingPerson>).message
+            Log.d("failed", "getTrendingPersonData: $message")
+        }
+    }
+}
+
+@Composable
+fun TrendingPersonList(navigationController: NavController, list: List<Result>) {
+
     Row(
         modifier = Modifier.padding(bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -81,13 +121,13 @@ fun TrendingPersonList(navigationController: NavController) {
             })
     }
     LazyRow {
-        items(itemList) { item ->
+        items(list) { item ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(horizontal = 5.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.person),
+                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/original" + item.profile_path),
                     contentDescription = "Person Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -95,7 +135,7 @@ fun TrendingPersonList(navigationController: NavController) {
                         .height(90.dp)
                         .clip(CircleShape)
                 )
-                Text(text = item, color = Color.White, modifier = Modifier.padding(top = 8.dp))
+                Text(text = item.name, color = Color.White, modifier = Modifier.padding(top = 8.dp))
             }
         }
     }
