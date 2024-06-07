@@ -1,4 +1,4 @@
-package com.app.moviematrix
+package com.app.moviematrix.presentation
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import com.app.moviematrix.R
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
