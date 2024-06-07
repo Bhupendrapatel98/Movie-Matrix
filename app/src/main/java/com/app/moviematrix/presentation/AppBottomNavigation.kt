@@ -1,4 +1,4 @@
-package com.app.moviematrix
+package com.app.moviematrix.presentation
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -25,9 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.app.moviematrix.R
 
 @Composable
-fun AppBottomNavigation(navController: NavController,context: Context) {
+fun AppBottomNavigation(navController: NavController, context: Context) {
     var selectedItem by remember { mutableStateOf(0) }
 
     Scaffold(bottomBar = {
@@ -90,7 +91,6 @@ fun AppBottomNavigation(navController: NavController,context: Context) {
         ) {
             when (selectedItem) {
                 0 -> Home(navController)
-                //0 -> MovieList(this@MainActivity)
                 1 -> SearchPage()
                 2 -> MyList(context)
                 3 -> MenuPage()

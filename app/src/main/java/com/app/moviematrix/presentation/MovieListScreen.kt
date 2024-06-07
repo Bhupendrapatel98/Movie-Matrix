@@ -1,4 +1,4 @@
-package com.app.moviematrix
+package com.app.moviematrix.presentation
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import com.app.moviematrix.R
 
 @Composable
 fun MovieList(context: Context) {
