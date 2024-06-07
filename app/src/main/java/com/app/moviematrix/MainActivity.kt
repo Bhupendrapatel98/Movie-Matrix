@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
+import com.app.moviematrix.R
 import com.app.moviematrix.navigation.NavGraph
 
 class MainActivity : ComponentActivity() {

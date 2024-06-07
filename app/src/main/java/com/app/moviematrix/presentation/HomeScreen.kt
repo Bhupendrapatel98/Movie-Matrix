@@ -1,4 +1,4 @@
-package com.app.moviematrix
+package com.app.moviematrix.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,10 +32,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.app.moviematrix.R
 import com.app.moviematrix.navigation.MainDestinations
 
 @Composable
