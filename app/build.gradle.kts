@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.daggerhilt)
+    kotlin("kapt")
 }
 
 android {
@@ -49,6 +51,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -66,7 +72,37 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //for slider
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.pager.indicators)
+
+    //navigation
     implementation(libs.navigation.compose)
+    implementation(libs.navigation.hilt.compose)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson.converter)
+    implementation(libs.interceptor)
+
+    //hilt
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
+
+    //coil
+    implementation(libs.coil.compose)
+
+    //paging3
+    implementation(libs.paging.compose)
+
+    //gson
+    implementation(libs.gson)
+
+    //room
+    implementation(libs.room)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+
 }
