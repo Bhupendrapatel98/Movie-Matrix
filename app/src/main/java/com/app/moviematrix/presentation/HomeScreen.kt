@@ -1,5 +1,6 @@
 package com.app.moviematrix.presentation
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -22,6 +23,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +52,7 @@ import com.app.moviematrix.navigation.MainDestinations
 import com.app.moviematrix.utills.Resource
 
 @Composable
-fun Home(navigationController: NavController) {
+fun Home(navigationController: NavController,context: Context) {
     Column {
         Header()
         Column(
@@ -59,7 +61,7 @@ fun Home(navigationController: NavController) {
                 .verticalScroll(rememberScrollState())
         ) {
             SliderBanner()
-            getTrendingPersonData(navigationController = navigationController)
+            getTrendingPersonData(navigationController = navigationController, context = context)
             TrendingMovies(navigationController)
             PopularMovies(navigationController)
             TopRatedTvShow(navigationController)
@@ -70,28 +72,23 @@ fun Home(navigationController: NavController) {
 @Composable
 fun getTrendingPersonData(
     navigationController: NavController,
-    viewModel: TrendingPersonViewModel = hiltViewModel()
+    viewModel: TrendingPersonViewModel = hiltViewModel(),
+    context: Context
 ) {
 
     val trendingPersonState by viewModel.trendingPersonStateFlow.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.getTrendingPerson("c4824776bf6f08433a4c4e7cd75a6acc")
-    }
-
-    when (trendingPersonState) {
+    when (val state = trendingPersonState) {
         is Resource.Loading -> {
-            Log.d("Loading", "getTrendingPersonData: ")
+            CircularProgressIndicator()
         }
 
         is Resource.Success -> {
-            val personData = (trendingPersonState as Resource.Success<TrendingPerson>).data.results
-            TrendingPersonList(navigationController, personData)
+            TrendingPersonList(navigationController, state.data.results)
         }
 
         is Resource.Failed -> {
-            val message = (trendingPersonState as Resource.Failed<TrendingPerson>).message
-            Log.d("failed", "getTrendingPersonData: $message")
+            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
         }
     }
 }

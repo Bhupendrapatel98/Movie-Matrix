@@ -5,15 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.app.moviematrix.presentation.AppBottomNavigation
-import com.app.moviematrix.presentation.Home
 import com.app.moviematrix.presentation.MainScreen
-import com.app.moviematrix.presentation.MenuPage
 import com.app.moviematrix.presentation.MovieList
-import com.app.moviematrix.presentation.MyList
 import com.app.moviematrix.presentation.PersonList
-import com.app.moviematrix.presentation.Screen
-import com.app.moviematrix.presentation.SearchPage
 import com.app.moviematrix.presentation.SplashScreen
 
 @Composable
