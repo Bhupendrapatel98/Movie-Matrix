@@ -6,8 +6,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.app.moviematrix.presentation.AppBottomNavigation
+import com.app.moviematrix.presentation.Home
+import com.app.moviematrix.presentation.MainScreen
+import com.app.moviematrix.presentation.MenuPage
 import com.app.moviematrix.presentation.MovieList
+import com.app.moviematrix.presentation.MyList
 import com.app.moviematrix.presentation.PersonList
+import com.app.moviematrix.presentation.Screen
+import com.app.moviematrix.presentation.SearchPage
 import com.app.moviematrix.presentation.SplashScreen
 
 @Composable
@@ -16,8 +22,9 @@ fun NavGraph(navHostController: NavHostController, context: Context) {
         composable(route = MainDestinations.SPLASH) {
             SplashScreen(navHostController)
         }
-        composable(route = MainDestinations.HOME_ROUTE) {
-            AppBottomNavigation(navHostController,context)
+        composable(route = MainDestinations.DASHBOARD) {
+            //AppBottomNavigation(navHostController,context)
+            MainScreen(navHostController,context)
         }
         composable(route = MainDestinations.MOVIE_LIST) {
             MovieList(context = context)
@@ -25,6 +32,18 @@ fun NavGraph(navHostController: NavHostController, context: Context) {
         composable(route = MainDestinations.PERSON_LIST) {
             PersonList(context = context)
         }
+       /* composable(route = MainDestinations.HOME) {
+            Home(navHostController)
+        }
+        composable(route = MainDestinations.SEARCH) {
+            SearchPage()
+        }
+        composable(route = MainDestinations.LIST) {
+            MyList(context)
+        }
+        composable(route = MainDestinations.MENU) {
+            MenuPage()
+        }*/
     }
 }
 
