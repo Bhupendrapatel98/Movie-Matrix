@@ -45,7 +45,7 @@ fun MainScreen(navController: NavController, context: Context) {
                 navController = bottomNavController,
                 startDestination = Screen.Home.route
             ) {
-                composable(Screen.Home.route) { Home(navigationController = navController) }
+                composable(Screen.Home.route) { Home(navigationController = navController,context) }
                 composable(Screen.Search.route) { SearchPage() }
                 composable(Screen.List.route) { MyList(context = context) }
                 composable(Screen.Menu.route) { MenuPage() }
