@@ -1,7 +1,6 @@
 package com.app.moviematrix.presentation
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -80,7 +79,9 @@ fun getTrendingPersonData(
 
     when (val state = trendingPersonState) {
         is Resource.Loading -> {
-            CircularProgressIndicator()
+            Box(modifier = Modifier.fillMaxWidth()){
+                CircularProgressIndicator()
+            }
         }
 
         is Resource.Success -> {
