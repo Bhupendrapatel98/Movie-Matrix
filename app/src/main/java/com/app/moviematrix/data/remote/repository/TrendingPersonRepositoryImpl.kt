@@ -9,5 +9,4 @@ class TrendingPersonRepositoryImpl @Inject constructor(private val apiService: A
     override suspend fun getTrendingPerson(apikey: String): TrendingPerson {
         return apiService.getTrendingPerson(apikey)
     }
-
 }
