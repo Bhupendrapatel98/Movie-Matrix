@@ -6,6 +6,7 @@ import com.app.moviematrix.domain.use_case.TrendingPersonUseCase
 import com.app.moviematrix.utills.Resource
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
@@ -22,6 +23,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 @RunWith(JUnit4::class)
+@ExperimentalCoroutinesApi
 class TrendingPersonViewModelTest {
 
     @Mock
