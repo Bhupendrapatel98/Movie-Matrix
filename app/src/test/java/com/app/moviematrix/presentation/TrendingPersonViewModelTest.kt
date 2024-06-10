@@ -9,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -21,20 +23,26 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(JUnit4::class)
-@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class TrendingPersonViewModelTest {
 
     @Mock
     private lateinit var trendingPersonUseCase: TrendingPersonUseCase
 
     private lateinit var trendingPersonViewModel: TrendingPersonViewModel
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(testDispatcher)
+
+        // Mocking initial fetch behavior in init block
+        `when`(trendingPersonUseCase.invoke(BuildConfig.API_KEY)).thenReturn(flowOf(Resource.loading()))
+
         trendingPersonViewModel = TrendingPersonViewModel(trendingPersonUseCase)
     }
 
@@ -47,7 +55,8 @@ class TrendingPersonViewModelTest {
     fun `getTrendingPerson emits loading then success`() = runTest {
 
         // Given
-        val mockTrendingPerson = TrendingPerson(page = 1, results = emptyList(), total_pages = 1, total_results = 1)
+        val mockTrendingPerson =
+            TrendingPerson(page = 1, results = emptyList(), total_pages = 1, total_results = 1)
         val expectedResource = Resource.success(mockTrendingPerson)
 
         // Mocking method behavior
@@ -57,6 +66,7 @@ class TrendingPersonViewModelTest {
         trendingPersonViewModel.getTrendingPerson(BuildConfig.API_KEY)
 
         //Then
+        advanceUntilIdle() // Ensure all coroutines have completed
         val actualResource = trendingPersonViewModel.trendingPersonStateFlow.value
         assertEquals(expectedResource, actualResource)
     }
@@ -75,6 +85,7 @@ class TrendingPersonViewModelTest {
         trendingPersonViewModel.getTrendingPerson(BuildConfig.API_KEY)
 
         //Then
+        advanceUntilIdle() // Ensure all coroutines have completed
         val actualResource = trendingPersonViewModel.trendingPersonStateFlow.value
         assertEquals(expectedResource, actualResource)
     }
