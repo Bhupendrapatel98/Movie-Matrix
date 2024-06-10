@@ -22,7 +22,7 @@ android {
         }
 
         // Build configuration fields for API key
-        buildConfigField("String","API_KEY","\"c4824776bf6f08433a4c4e7cd75a6acc\"")
+        buildConfigField("String","API_KEY","\"${property("API_KEY")}\"")
     }
 
     buildTypes {
