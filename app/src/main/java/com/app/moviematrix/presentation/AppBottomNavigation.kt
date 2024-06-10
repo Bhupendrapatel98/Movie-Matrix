@@ -3,8 +3,7 @@ package com.app.moviematrix.presentation
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -18,84 +17,89 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.app.moviematrix.R
+import com.app.moviematrix.navigation.MainDestinations
+import com.app.moviematrix.ui.theme.Background
+
+@Composable
+fun MainScreen(navController: NavController, context: Context) {
+    val bottomNavController = rememberNavController()
+
+    Scaffold(
+        bottomBar = { AppBottomNavigation(bottomNavController, context) }
+    ) { innerPadding ->
+        Box(modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxSize()
+            .background(Background)) {
+            NavHost(
+                navController = bottomNavController,
+                startDestination = Screen.Home.route
+            ) {
+                composable(Screen.Home.route) { Home(navigationController = navController,context) }
+                composable(Screen.Search.route) { SearchPage() }
+                composable(Screen.List.route) { MyList(context = context) }
+                composable(Screen.Menu.route) { MenuPage() }
+            }
+        }
+    }
+}
 
 @Composable
 fun AppBottomNavigation(navController: NavController, context: Context) {
-    var selectedItem by remember { mutableStateOf(0) }
 
-    Scaffold(bottomBar = {
-        BottomNavigation(
-            backgroundColor = Color(
-                ContextCompat.getColor(
-                    context,
-                    R.color.bottomnav
-                )
-            )
-        ) {
-            BottomNavigationItem(
-                selected = selectedItem == 0,
-                label = { Text(text = "Home", color = Color.White) },
-                onClick = { selectedItem = 0 },
-                icon = { Icon(Icons.Default.Home, contentDescription = "", tint = Color.White) }
-            )
+    val screens = listOf(
+        Screen.Home,
+        Screen.Search,
+        Screen.List,
+        Screen.Menu
+    )
+    val currentDestination by navController.currentBackStackEntryAsState()
+    val currentRoute = currentDestination?.destination?.route
 
-            BottomNavigationItem(
-                selected = selectedItem == 1,
-                label = { Text(text = "Search", color = Color.White) },
-                onClick = { selectedItem = 1 },
-                icon = {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                }
+    BottomNavigation(
+        contentColor = Color.White,
+        backgroundColor = Color(
+            ContextCompat.getColor(
+                context,
+                R.color.bottomnav
             )
-
+        )
+    ) {
+        screens.forEach { screen ->
             BottomNavigationItem(
-                selected = selectedItem == 2,
-                label = { Text(text = "List", color = Color.White) },
-                onClick = { selectedItem = 2 },
-                icon = { Icon(Icons.Default.List, contentDescription = "", tint = Color.White) }
-            )
-
-            BottomNavigationItem(
-                selected = selectedItem == 3,
-                label = { Text(text = "Menu", color = Color.White) },
-                onClick = { selectedItem = 3 },
-                icon = { Icon(Icons.Default.Menu, contentDescription = "", tint = Color.White) }
+                selected = currentRoute == screen.route,
+                label = { Text(text = screen.label, color = Color.White) },
+                onClick = {
+                    if (currentRoute != screen.route) {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                },
+                icon = { Icon(screen.icon, contentDescription = null) }
             )
         }
-    }) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .background(
-                    Color(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.background
-                        )
-                    )
-                )
-                .fillMaxHeight()
-                .fillMaxWidth()
-        ) {
-            when (selectedItem) {
-                0 -> Home(navController)
-                1 -> SearchPage()
-                2 -> MyList(context)
-                3 -> MenuPage()
-            }
-        }
-
     }
+
+}
+
+sealed class Screen(val route: String, val icon: ImageVector, val label: String) {
+    object Home : Screen(MainDestinations.HOME, Icons.Default.Home, "Home")
+    object Search : Screen(MainDestinations.SEARCH, Icons.Default.Search, "Search")
+    object List : Screen(MainDestinations.LIST, Icons.Default.List, "List")
+    object Menu : Screen(MainDestinations.MENU, Icons.Default.Menu, "Menu")
 }

@@ -23,6 +23,16 @@ jobs:
     - name: Build APK
       run: ./gradlew assembleDebug
 
+    - name: Run Unit Tests
+      run: ./gradlew testDebugUnitTest
+
+    - name: Upload Test Report
+      if: failure() || success()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-report
+        path: app/build/reports/tests/testDebugUnitTest
+
     - name: Upload APK
       uses: actions/upload-artifact@v2
       with:
