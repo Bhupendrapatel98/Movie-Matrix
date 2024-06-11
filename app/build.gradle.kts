@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.daggerhilt)
+    alias(libs.plugins.google.services)
     kotlin("kapt")
 }
 
@@ -113,5 +114,8 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.room.paging)
+
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.analytics)
 
 }

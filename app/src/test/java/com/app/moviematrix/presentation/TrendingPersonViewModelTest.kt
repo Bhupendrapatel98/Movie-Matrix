@@ -8,7 +8,6 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -18,9 +17,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
@@ -55,8 +52,7 @@ class TrendingPersonViewModelTest {
     fun `getTrendingPerson emits loading then success`() = runTest {
 
         // Given
-        val mockTrendingPerson =
-            TrendingPerson(page = 1, results = emptyList(), total_pages = 1, total_results = 1)
+        val mockTrendingPerson = TrendingPerson(page = 1, results = emptyList(), total_pages = 1, total_results = 1)
         val expectedResource = Resource.success(mockTrendingPerson)
 
         // Mocking method behavior
