@@ -24,85 +24,92 @@ import com.app.moviematrix.R
 
 @Composable
 fun MenuPage() {
-
     Column(Modifier.padding(top = 25.dp, start = 15.dp, end = 15.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.ic_bookmark),
                 contentDescription = "BookMark",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp),
             )
             Text(
                 text = "BookMarks",
                 fontSize = 16.sp,
                 color = Color.White,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp),
             )
         }
         HorizontalDivider(
-            color = Color.White, modifier = Modifier
-                .padding(vertical = 15.dp)
-                .height(1.dp)
-                .fillMaxWidth()
+            color = Color.White,
+            modifier =
+                Modifier
+                    .padding(vertical = 15.dp)
+                    .height(1.dp)
+                    .fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.ic_rate),
                 contentDescription = "Rate",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp),
             )
             Text(
                 text = "Rate",
                 fontSize = 16.sp,
                 color = Color.White,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp),
             )
         }
         HorizontalDivider(
-            color = Color.White, modifier = Modifier
-                .padding(vertical = 15.dp)
-                .height(1.dp)
-                .fillMaxWidth()
+            color = Color.White,
+            modifier =
+                Modifier
+                    .padding(vertical = 15.dp)
+                    .height(1.dp)
+                    .fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 Icons.Default.Share,
                 colorFilter = ColorFilter.tint(Color.White),
                 contentDescription = "Share",
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp),
             )
             Text(
                 text = "Share",
                 fontSize = 16.sp,
                 color = Color.White,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp),
             )
         }
         HorizontalDivider(
-            color = Color.White, modifier = Modifier
-                .padding(vertical = 15.dp)
-                .height(1.dp)
-                .fillMaxWidth()
+            color = Color.White,
+            modifier =
+                Modifier
+                    .padding(vertical = 15.dp)
+                    .height(1.dp)
+                    .fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 Icons.Default.Info,
                 contentDescription = "BookMark",
                 modifier = Modifier.size(30.dp),
-                colorFilter = ColorFilter.tint(Color.White)
+                colorFilter = ColorFilter.tint(Color.White),
             )
             Text(
                 text = "App Info",
                 fontSize = 16.sp,
                 color = Color.White,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 10.dp),
             )
         }
         HorizontalDivider(
-            color = Color.White, modifier = Modifier
-                .padding(vertical = 15.dp)
-                .height(1.dp)
-                .fillMaxWidth()
+            color = Color.White,
+            modifier =
+                Modifier
+                    .padding(vertical = 15.dp)
+                    .height(1.dp)
+                    .fillMaxWidth(),
         )
     }
 }
