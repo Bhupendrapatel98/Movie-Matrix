@@ -27,25 +27,34 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.moviematrix.R
-import com.app.moviematrix.navigation.MainDestinations
+import com.app.moviematrix.navigation.HOME
+import com.app.moviematrix.navigation.LIST
+import com.app.moviematrix.navigation.MENU
+import com.app.moviematrix.navigation.SEARCH
 import com.app.moviematrix.ui.theme.Background
 
 @Composable
-fun MainScreen(navController: NavController, context: Context) {
+fun MainScreen(
+    navController: NavController,
+    context: Context,
+) {
     val bottomNavController = rememberNavController()
 
     Scaffold(
-        bottomBar = { AppBottomNavigation(bottomNavController, context) }
+        bottomBar = { AppBottomNavigation(bottomNavController, context) },
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
-            .background(Background)) {
+        Box(
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(Background),
+        ) {
             NavHost(
                 navController = bottomNavController,
-                startDestination = Screen.Home.route
+                startDestination = Screen.Home.route,
             ) {
-                composable(Screen.Home.route) { Home(navigationController = navController,context) }
+                composable(Screen.Home.route) { Home(navigationController = navController, context) }
                 composable(Screen.Search.route) { SearchPage() }
                 composable(Screen.List.route) { MyList(context = context) }
                 composable(Screen.Menu.route) { MenuPage() }
@@ -55,25 +64,29 @@ fun MainScreen(navController: NavController, context: Context) {
 }
 
 @Composable
-fun AppBottomNavigation(navController: NavController, context: Context) {
-
-    val screens = listOf(
-        Screen.Home,
-        Screen.Search,
-        Screen.List,
-        Screen.Menu
-    )
+fun AppBottomNavigation(
+    navController: NavController,
+    context: Context,
+) {
+    val screens =
+        listOf(
+            Screen.Home,
+            Screen.Search,
+            Screen.List,
+            Screen.Menu,
+        )
     val currentDestination by navController.currentBackStackEntryAsState()
     val currentRoute = currentDestination?.destination?.route
 
     BottomNavigation(
         contentColor = Color.White,
-        backgroundColor = Color(
-            ContextCompat.getColor(
-                context,
-                R.color.bottomnav
-            )
-        )
+        backgroundColor =
+            Color(
+                ContextCompat.getColor(
+                    context,
+                    R.color.bottomnav,
+                ),
+            ),
     ) {
         screens.forEach { screen ->
             BottomNavigationItem(
@@ -90,16 +103,18 @@ fun AppBottomNavigation(navController: NavController, context: Context) {
                         }
                     }
                 },
-                icon = { Icon(screen.icon, contentDescription = null) }
+                icon = { Icon(screen.icon, contentDescription = null) },
             )
         }
     }
-
 }
 
 sealed class Screen(val route: String, val icon: ImageVector, val label: String) {
-    object Home : Screen(MainDestinations.HOME, Icons.Default.Home, "Home")
-    object Search : Screen(MainDestinations.SEARCH, Icons.Default.Search, "Search")
-    object List : Screen(MainDestinations.LIST, Icons.Default.List, "List")
-    object Menu : Screen(MainDestinations.MENU, Icons.Default.Menu, "Menu")
+    object Home : Screen(HOME, Icons.Default.Home, "Home")
+
+    object Search : Screen(SEARCH, Icons.Default.Search, "Search")
+
+    object List : Screen(LIST, Icons.Default.List, "List")
+
+    object Menu : Screen(MENU, Icons.Default.Menu, "Menu")
 }

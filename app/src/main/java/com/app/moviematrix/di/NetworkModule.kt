@@ -1,8 +1,8 @@
 package com.app.moviematrix.di
 
 import com.app.moviematrix.data.remote.api.ApiService
-import com.app.moviematrix.domain.repository.TrendingPersonRepository
 import com.app.moviematrix.data.remote.repository.TrendingPersonRepositoryImpl
+import com.app.moviematrix.domain.repository.TrendingPersonRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-
     @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()

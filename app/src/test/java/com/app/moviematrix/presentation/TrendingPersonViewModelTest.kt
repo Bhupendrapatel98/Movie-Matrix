@@ -2,7 +2,7 @@ package com.app.moviematrix.presentation
 
 import com.app.moviematrix.BuildConfig
 import com.app.moviematrix.data.model.trendingperson.TrendingPerson
-import com.app.moviematrix.domain.use_case.TrendingPersonUseCase
+import com.app.moviematrix.domain.usecase.TrendingPersonUseCase
 import com.app.moviematrix.utills.Resource
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,6 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class TrendingPersonViewModelTest {
-
     @Mock
     private lateinit var trendingPersonUseCase: TrendingPersonUseCase
 
@@ -49,41 +48,40 @@ class TrendingPersonViewModelTest {
     }
 
     @Test
-    fun `getTrendingPerson emits loading then success`() = runTest {
+    fun `getTrendingPerson emits loading then success`() =
+        runTest {
+            // Given
+            val mockTrendingPerson = TrendingPerson(page = 1, results = emptyList(), total_pages = 1, total_results = 1)
+            val expectedResource = Resource.success(mockTrendingPerson)
 
-        // Given
-        val mockTrendingPerson = TrendingPerson(page = 1, results = emptyList(), total_pages = 1, total_results = 1)
-        val expectedResource = Resource.success(mockTrendingPerson)
+            // Mocking method behavior
+            `when`(trendingPersonUseCase.invoke(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
 
-        // Mocking method behavior
-        `when`(trendingPersonUseCase.invoke(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
+            // When
+            trendingPersonViewModel.getTrendingPerson(BuildConfig.API_KEY)
 
-        //When
-        trendingPersonViewModel.getTrendingPerson(BuildConfig.API_KEY)
-
-        //Then
-        advanceUntilIdle() // Ensure all coroutines have completed
-        val actualResource = trendingPersonViewModel.trendingPersonStateFlow.value
-        assertEquals(expectedResource, actualResource)
-    }
+            // Then
+            advanceUntilIdle() // Ensure all coroutines have completed
+            val actualResource = trendingPersonViewModel.trendingPersonStateFlow.value
+            assertEquals(expectedResource, actualResource)
+        }
 
     @Test
-    fun `getTrendingPerson emits loading then failure`() = runTest {
+    fun `getTrendingPerson emits loading then failure`() =
+        runTest {
+            // Given
+            val errorMessage = "Failed to load data"
+            val expectedResource = Resource.failed<TrendingPerson>(errorMessage)
 
-        // Given
-        val errorMessage = "Failed to load data"
-        val expectedResource = Resource.failed<TrendingPerson>(errorMessage)
+            // Mocking method behavior
+            `when`(trendingPersonUseCase.invoke(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
 
-        // Mocking method behavior
-        `when`(trendingPersonUseCase.invoke(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
+            // When
+            trendingPersonViewModel.getTrendingPerson(BuildConfig.API_KEY)
 
-        //When
-        trendingPersonViewModel.getTrendingPerson(BuildConfig.API_KEY)
-
-        //Then
-        advanceUntilIdle() // Ensure all coroutines have completed
-        val actualResource = trendingPersonViewModel.trendingPersonStateFlow.value
-        assertEquals(expectedResource, actualResource)
-    }
-
+            // Then
+            advanceUntilIdle() // Ensure all coroutines have completed
+            val actualResource = trendingPersonViewModel.trendingPersonStateFlow.value
+            assertEquals(expectedResource, actualResource)
+        }
 }
