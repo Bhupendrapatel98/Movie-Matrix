@@ -32,22 +32,24 @@ import com.app.moviematrix.R
 @Composable
 fun PersonList(context: Context) {
     Column(
-        modifier = Modifier.fillMaxSize().background(
-            Color(
-                ContextCompat.getColor(
-                    context,
-                    R.color.background
-                )
-            )
-        )
+        modifier =
+            Modifier.fillMaxSize().background(
+                Color(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.background,
+                    ),
+                ),
+            ),
     ) {
         Text(
             text = "Movie Stack",
             fontSize = 20.sp,
             color = Color.White,
-            modifier = Modifier
-                .padding(vertical = 10.dp)
-                .background(Color(ContextCompat.getColor(context, R.color.bottomnav)))
+            modifier =
+                Modifier
+                    .padding(vertical = 10.dp)
+                    .background(Color(ContextCompat.getColor(context, R.color.bottomnav))),
         )
         val list = listOf("Bhupendra", "Nagendra", "Ankit", "Shubham", "ananya", "pandy")
         LazyColumn {
@@ -55,15 +57,16 @@ fun PersonList(context: Context) {
                 Row(
                     Modifier
                         .height(80.dp)
-                        .padding(horizontal = 15.dp)
+                        .padding(horizontal = 15.dp),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.person),
                         contentDescription = "bannerImage",
-                        modifier = Modifier
-                            .width(80.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
+                        modifier =
+                            Modifier
+                                .width(80.dp)
+                                .clip(CircleShape),
+                        contentScale = ContentScale.Crop,
                     )
                     Column(Modifier.padding(start = 10.dp).fillMaxSize(), verticalArrangement = Arrangement.Center) {
                         Text(
@@ -71,22 +74,20 @@ fun PersonList(context: Context) {
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 10.dp)
+                            modifier = Modifier.padding(top = 10.dp),
                         )
                         Spacer(modifier = Modifier.width(5.dp))
                         Text(text = "Acting", color = Color.Gray, fontSize = 16.sp)
-
                     }
-
                 }
                 HorizontalDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 15.dp)
-                        .height(1.dp)
-                        .background(Color.White)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp, horizontal = 15.dp)
+                            .height(1.dp)
+                            .background(Color.White),
                 )
-
             }
         }
     }

@@ -11,34 +11,23 @@ import com.app.moviematrix.presentation.PersonList
 import com.app.moviematrix.presentation.SplashScreen
 
 @Composable
-fun NavGraph(navHostController: NavHostController, context: Context) {
-    NavHost(navController = navHostController, startDestination = MainDestinations.SPLASH) {
-        composable(route = MainDestinations.SPLASH) {
+fun NavGraph(
+    navHostController: NavHostController,
+    context: Context,
+) {
+    NavHost(navController = navHostController, startDestination = SPLASH) {
+        composable(route = SPLASH) {
             SplashScreen(navHostController)
         }
-        composable(route = MainDestinations.DASHBOARD) {
-            //AppBottomNavigation(navHostController,context)
-            MainScreen(navHostController,context)
+        composable(route = DASHBOARD) {
+            // AppBottomNavigation(navHostController,context)
+            MainScreen(navHostController, context)
         }
-        composable(route = MainDestinations.MOVIE_LIST) {
+        composable(route = MOVIE_LIST) {
             MovieList(context = context)
         }
-        composable(route = MainDestinations.PERSON_LIST) {
+        composable(route = PERSON_LIST) {
             PersonList(context = context)
         }
-       /* composable(route = MainDestinations.HOME) {
-            Home(navHostController)
-        }
-        composable(route = MainDestinations.SEARCH) {
-            SearchPage()
-        }
-        composable(route = MainDestinations.LIST) {
-            MyList(context)
-        }
-        composable(route = MainDestinations.MENU) {
-            MenuPage()
-        }*/
     }
 }
-
-

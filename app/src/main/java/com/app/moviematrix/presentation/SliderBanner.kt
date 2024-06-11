@@ -33,18 +33,19 @@ import kotlin.math.absoluteValue
 @Composable
 fun SliderBanner() {
     val pagerState = rememberPagerState(initialPage = 0)
-    val imageSlider = listOf(
-        painterResource(id = R.drawable.person),
-        painterResource(id = R.drawable.person),
-        painterResource(id = R.drawable.person)
-    )
+    val imageSlider =
+        listOf(
+            painterResource(id = R.drawable.person),
+            painterResource(id = R.drawable.person),
+            painterResource(id = R.drawable.person),
+        )
 
     LaunchedEffect(Unit) {
         while (true) {
             yield()
             delay(2600)
             pagerState.animateScrollToPage(
-                page = (pagerState.currentPage + 1) % (pagerState.pageCount)
+                page = (pagerState.currentPage + 1) % (pagerState.pageCount),
             )
         }
     }
@@ -53,49 +54,52 @@ fun SliderBanner() {
         HorizontalPager(
             count = imageSlider.size,
             state = pagerState,
-            modifier = Modifier
-                .height(180.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .height(180.dp)
+                    .fillMaxWidth(),
         ) { page ->
             Card(
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .graphicsLayer {
-                        val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
+                modifier =
+                    Modifier
+                        .graphicsLayer {
+                            val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
 
-                        lerp(
-                            start = 0.85f,
-                            stop = 1f,
-                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                        ).also { scale ->
-                            scaleX = scale
-                            scaleY = scale
-                        }
+                            lerp(
+                                start = 0.85f,
+                                stop = 1f,
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                            ).also { scale ->
+                                scaleX = scale
+                                scaleY = scale
+                            }
 
-                        alpha = lerp(
-                            start = 0.5f,
-                            stop = 1f,
-                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                        )
-                    }
+                            alpha =
+                                lerp(
+                                    start = 0.5f,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                )
+                        },
             ) {
                 Image(
                     painter = imageSlider[page],
                     contentDescription = stringResource(R.string.app_name),
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }
 
         HorizontalPagerIndicator(
             pagerState = pagerState,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp),
             activeColor = Color.White,
-            inactiveColor = Color.Gray
+            inactiveColor = Color.Gray,
         )
     }
-
 }
