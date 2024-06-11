@@ -48,9 +48,9 @@ fun TabLayout(context: Context) {
             contentColor = Color.White,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
                 )
-            }
+            },
         ) {
             titles.forEachIndexed { index, title ->
                 Tab(
@@ -87,10 +87,11 @@ fun MovieTab(context: Context) {
     Text(
         text = "Movies Content",
         color = Color.White,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(context.getColor(R.color.background)))
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color(context.getColor(R.color.background)))
+                .padding(16.dp),
     )
 }
 
@@ -99,9 +100,10 @@ fun TvShowTab(context: Context) {
     Text(
         text = "TV Shows Content",
         color = Color.White,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(context.getColor(R.color.background)))
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Color(context.getColor(R.color.background)))
+                .padding(16.dp),
     )
 }

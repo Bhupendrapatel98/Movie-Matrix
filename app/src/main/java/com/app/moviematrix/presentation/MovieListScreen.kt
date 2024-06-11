@@ -39,9 +39,10 @@ fun MovieList(context: Context) {
             text = "Movie Stack",
             fontSize = 20.sp,
             color = Color.White,
-            modifier = Modifier
-                .padding(vertical = 10.dp)
-                .background(Color(ContextCompat.getColor(context, R.color.bottomnav)))
+            modifier =
+                Modifier
+                    .padding(vertical = 10.dp)
+                    .background(Color(ContextCompat.getColor(context, R.color.bottomnav))),
         )
         val list = listOf("Bhupendra", "Nagendra", "Ankit", "Shubham", "ananya", "pandy")
         LazyColumn {
@@ -49,15 +50,16 @@ fun MovieList(context: Context) {
                 Row(
                     Modifier
                         .height(140.dp)
-                        .padding(horizontal = 15.dp)
+                        .padding(horizontal = 15.dp),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.person),
                         contentDescription = "bannerImage",
-                        modifier = Modifier
-                            .width(100.dp)
-                            .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
+                        modifier =
+                            Modifier
+                                .width(100.dp)
+                                .clip(RoundedCornerShape(10.dp)),
+                        contentScale = ContentScale.Crop,
                     )
                     Column(Modifier.padding(start = 10.dp)) {
                         Text(text = "2006", color = Color.White, fontSize = 14.sp)
@@ -66,7 +68,7 @@ fun MovieList(context: Context) {
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 10.dp)
+                            modifier = Modifier.padding(top = 10.dp),
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         Row(
@@ -75,24 +77,24 @@ fun MovieList(context: Context) {
                             Image(
                                 Icons.Default.Star,
                                 contentDescription = "start",
-                                colorFilter = ColorFilter.tint(
-                                    Color.White
-                                ),
-                                modifier = Modifier.size(16.dp)
+                                colorFilter =
+                                    ColorFilter.tint(
+                                        Color.White,
+                                    ),
+                                modifier = Modifier.size(16.dp),
                             )
                             Text(text = "8.4", color = Color.White, fontSize = 16.sp)
                         }
                     }
-
                 }
                 HorizontalDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 15.dp)
-                        .height(1.dp)
-                        .background(Color.White)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp, horizontal = 15.dp)
+                            .height(1.dp)
+                            .background(Color.White),
                 )
-
             }
         }
     }

@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.daggerhilt)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.ktlint)
     kotlin("kapt")
 }
 
@@ -22,7 +24,7 @@ android {
         }
 
         // Build configuration fields for API key
-        buildConfigField("String","API_KEY","\"${property("API_KEY")}\"")
+        buildConfigField("String", "API_KEY", "\"${property("API_KEY")}\"")
     }
 
     buildTypes {
@@ -30,7 +32,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -59,6 +61,26 @@ kapt {
     correctErrorTypes = true
 }
 
+// ktlint {
+//    android = true
+//    debug = true
+//    verbose = true
+//    outputToConsole = true
+//    outputColorName = "RED"
+//    ignoreFailures = false
+//    enableExperimentalRules = true
+//    reporters {
+//        reporter(ReporterType.PLAIN)
+//        reporter(ReporterType.CHECKSTYLE)
+//        reporter(ReporterType.SARIF)
+//    }
+//    filter {
+//        exclude("**/style-violations.kt")
+//        exclude("**/generated/**")
+//        include("**/kotlin/**")
+//    }
+// }
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -70,7 +92,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    //unit testing
+    // unit testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -82,36 +104,38 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //for slider
+    // for slider
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.pager.indicators)
 
-    //navigation
+    // navigation
     implementation(libs.navigation.compose)
     implementation(libs.navigation.hilt.compose)
 
-    //retrofit
+    // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
     implementation(libs.interceptor)
 
-    //hilt
+    // hilt
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
 
-    //coil
+    // coil
     implementation(libs.coil.compose)
 
-    //paging3
+    // paging3
     implementation(libs.paging.compose)
 
-    //gson
+    // gson
     implementation(libs.gson)
 
-    //room
+    // room
     implementation(libs.room)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.room.paging)
 
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.analytics)
 }

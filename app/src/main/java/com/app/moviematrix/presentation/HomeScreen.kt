@@ -25,7 +25,6 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,22 +41,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.app.moviematrix.R
 import com.app.moviematrix.data.model.trendingperson.Result
-import com.app.moviematrix.data.model.trendingperson.TrendingPerson
-import com.app.moviematrix.navigation.MainDestinations
+import com.app.moviematrix.navigation.MOVIE_LIST
+import com.app.moviematrix.navigation.PERSON_LIST
 import com.app.moviematrix.utills.Resource
 
 @Composable
-fun Home(navigationController: NavController,context: Context) {
+fun Home(
+    navigationController: NavController,
+    context: Context,
+) {
     Column {
         Header()
         Column(
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .padding(horizontal = 15.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
             SliderBanner()
             getTrendingPersonData(navigationController = navigationController, context = context)
@@ -72,14 +74,13 @@ fun Home(navigationController: NavController,context: Context) {
 fun getTrendingPersonData(
     navigationController: NavController,
     viewModel: TrendingPersonViewModel = hiltViewModel(),
-    context: Context
+    context: Context,
 ) {
-
     val trendingPersonState by viewModel.trendingPersonStateFlow.collectAsState()
 
     when (val state = trendingPersonState) {
         is Resource.Loading -> {
-            Box(modifier = Modifier.fillMaxWidth()){
+            Box(modifier = Modifier.fillMaxWidth()) {
                 CircularProgressIndicator()
             }
         }
@@ -95,43 +96,47 @@ fun getTrendingPersonData(
 }
 
 @Composable
-fun TrendingPersonList(navigationController: NavController, list: List<Result>) {
-
+fun TrendingPersonList(
+    navigationController: NavController,
+    list: List<Result>,
+) {
     Row(
         modifier = Modifier.padding(bottom = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "Trending",
             color = Color.White,
             fontSize = 21.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.width(5.dp))
         Text(text = "Person", color = Color.Gray, fontSize = 16.sp)
         Spacer(modifier = Modifier.weight(1f))
-        //Text(text = "More", color = Color.Red, fontSize = 16.sp)
+        // Text(text = "More", color = Color.Red, fontSize = 16.sp)
         ClickableText(
             text = AnnotatedString("More"),
             style = TextStyle(color = Color.Red, fontSize = 16.sp),
             onClick = {
-                navigationController.navigate(MainDestinations.PERSON_LIST)
-            })
+                navigationController.navigate(PERSON_LIST)
+            },
+        )
     }
     LazyRow {
         items(list) { item ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(horizontal = 5.dp)
+                modifier = Modifier.padding(horizontal = 5.dp),
             ) {
                 Image(
                     painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/original" + item.profile_path),
                     contentDescription = "Person Image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(90.dp)
-                        .height(90.dp)
-                        .clip(CircleShape)
+                    modifier =
+                        Modifier
+                            .width(90.dp)
+                            .height(90.dp)
+                            .clip(CircleShape),
                 )
                 Text(text = item.name, color = Color.White, modifier = Modifier.padding(top = 8.dp))
             }
@@ -142,16 +147,17 @@ fun TrendingPersonList(navigationController: NavController, list: List<Result>) 
 @Composable
 fun Header() {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 15.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 15.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "Movie Stack",
             color = Color.White,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.weight(1f))
         Image(
@@ -179,66 +185,74 @@ fun TopRatedTvShow(navigationController: NavController) {
 }
 
 @Composable
-fun CommonListUI(heading: String, title: String, navigationController: NavController) {
+fun CommonListUI(
+    heading: String,
+    title: String,
+    navigationController: NavController,
+) {
     val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 18.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 18.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = heading,
                 fontSize = 21.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
             )
             Spacer(Modifier.width(5.dp))
             Text(text = title, fontSize = 16.sp, color = Color.Gray)
             Spacer(modifier = Modifier.weight(1f))
-            //Text(text = "More", fontSize = 16.sp, color = Color.Red)
+            // Text(text = "More", fontSize = 16.sp, color = Color.Red)
             ClickableText(
                 text = AnnotatedString("More"),
                 style = TextStyle(color = Color.Red, fontSize = 16.sp),
                 onClick = {
-                    navigationController.navigate(MainDestinations.MOVIE_LIST)
-                })
+                    navigationController.navigate(MOVIE_LIST)
+                },
+            )
         }
         LazyRow(modifier = Modifier.padding(top = 15.dp)) {
             items(list) { item ->
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Box {
                         Image(
                             painter = painterResource(id = R.drawable.person),
                             contentDescription = "banner Image",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .width(120.dp)
-                                .height(150.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .padding(horizontal = 5.dp)
+                            modifier =
+                                Modifier
+                                    .width(120.dp)
+                                    .height(150.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .padding(horizontal = 5.dp),
                         )
                         Text(
                             text = "8.8",
                             fontSize = 14.sp,
                             color = Color.White,
-                            modifier = Modifier
-                                .padding(top = 5.dp, end = 8.dp)
-                                .clip(
-                                    CircleShape
-                                )
-                                .background(Color.Black)
-                                .padding(horizontal = 10.dp)
-                                .align(alignment = Alignment.TopEnd)
+                            modifier =
+                                Modifier
+                                    .padding(top = 5.dp, end = 8.dp)
+                                    .clip(
+                                        CircleShape,
+                                    )
+                                    .background(Color.Black)
+                                    .padding(horizontal = 10.dp)
+                                    .align(alignment = Alignment.TopEnd),
                         )
                     }
                     Text(
                         text = item,
                         fontSize = 16.sp,
                         color = Color.White,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp),
                     )
                 }
             }
