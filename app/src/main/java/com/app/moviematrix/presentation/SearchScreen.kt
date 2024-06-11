@@ -36,19 +36,19 @@ fun SearchPage() {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(horizontal = 15.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(horizontal = 15.dp),
     ) {
         Column {
-
             Text(
                 text = "Discover",
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
             )
             Box(
                 Modifier
@@ -56,23 +56,23 @@ fun SearchPage() {
                     .clip(RoundedCornerShape(20.dp))
                     .background(Color.White)
                     .padding(horizontal = 35.dp, vertical = 10.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
             ) {
-
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         Icons.Default.Search,
                         contentDescription = "searchImage",
-                        colorFilter = ColorFilter.tint(
-                            Color.Gray
-                        )
+                        colorFilter =
+                            ColorFilter.tint(
+                                Color.Gray,
+                            ),
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = "Movie, Tv Show or Person",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Gray
+                        color = Color.Gray,
                     )
                 }
             }
@@ -82,7 +82,7 @@ fun SearchPage() {
                 fontSize = 23.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.padding(top = 35.dp)
+                modifier = Modifier.padding(top = 35.dp),
             )
 
             Box(Modifier.padding(top = 15.dp)) {
@@ -91,29 +91,32 @@ fun SearchPage() {
                         Modifier
                             .weight(1f)
                             .height(120.dp)
-                            .clip(RoundedCornerShape(15.dp))
+                            .clip(RoundedCornerShape(15.dp)),
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.person),
                             contentDescription = "person",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxHeight()
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight(),
                         )
                         Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth()
-                                .background(Color.Black.copy(alpha = 0.4f))
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth()
+                                    .background(Color.Black.copy(alpha = 0.4f)),
                         )
                         Text(
                             text = "Movies",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White,
-                            modifier = Modifier
-                                .padding(top = 25.dp)
-                                .align(alignment = Alignment.BottomCenter)
+                            modifier =
+                                Modifier
+                                    .padding(top = 25.dp)
+                                    .align(alignment = Alignment.BottomCenter),
                         )
                     }
 
@@ -123,21 +126,23 @@ fun SearchPage() {
                         Modifier
                             .weight(1f)
                             .height(120.dp)
-                            .clip(RoundedCornerShape(15.dp))
+                            .clip(RoundedCornerShape(15.dp)),
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.person),
                             contentDescription = "person",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxHeight()
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight(),
                         )
 
                         Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth()
-                                .background(Color.Black.copy(alpha = 0.4f))
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth()
+                                    .background(Color.Black.copy(alpha = 0.4f)),
                         )
 
                         Text(
@@ -145,12 +150,12 @@ fun SearchPage() {
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White,
-                            modifier = Modifier
-                                .padding(top = 25.dp)
-                                .align(alignment = Alignment.BottomCenter)
+                            modifier =
+                                Modifier
+                                    .padding(top = 25.dp)
+                                    .align(alignment = Alignment.BottomCenter),
                         )
                     }
-
                 }
             }
 
@@ -159,7 +164,7 @@ fun SearchPage() {
                     .padding(top = 15.dp)
                     .fillMaxWidth()
                     .height(160.dp)
-                    .clip(RoundedCornerShape(15.dp))
+                    .clip(RoundedCornerShape(15.dp)),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.person),
@@ -168,10 +173,11 @@ fun SearchPage() {
                 )
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                        .background(Color.Black.copy(alpha = 0.4f))
+                    modifier =
+                        Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .background(Color.Black.copy(alpha = 0.4f)),
                 )
 
                 Text(
@@ -179,9 +185,10 @@ fun SearchPage() {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
-                    modifier = Modifier
-                        .padding(top = 25.dp)
-                        .align(alignment = Alignment.BottomCenter)
+                    modifier =
+                        Modifier
+                            .padding(top = 25.dp)
+                            .align(alignment = Alignment.BottomCenter),
                 )
             }
         }

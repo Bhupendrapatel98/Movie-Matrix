@@ -21,6 +21,10 @@ room = "2.6.1"
 hilt-navigation-compose = "1.2.0"
 mockito = "5.3.1"
 kotlinx-coroutines-test = "1.8.0"
+google-services="4.4.2"
+firebase-bom="33.1.0"
+firebase-analytics = "22.0.1"
+ktlint= "12.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +54,7 @@ accompanist-pager-indicators = { group = "com.google.accompanist", name = "accom
 navigation-compose = {group="androidx.navigation",name="navigation-compose",version.ref="navigation-compose"}
 navigation-hilt-compose = {group="androidx.hilt",name="hilt-navigation-compose",version.ref="hilt-navigation-compose"}
 
+
 #Retrofit
 retrofit = {group="com.squareup.retrofit2",name="retrofit",version.ref="retrofit"}
 retrofit-gson-converter = {group="com.squareup.retrofit2",name="converter-gson",version.ref="retrofit"}
@@ -74,9 +79,16 @@ room-compiler = {group="androidx.room",name="room-compiler",version.ref="room"}
 room-paging = {group="androidx.room",name="room-paging",version.ref="room"}
 room-ktx = {group="androidx.room",name="room-ktx",version.ref="room"}
 
+firebase-bom = {group="com.google.firebase",name="firebase-bom",version.ref="firebase-bom"}
+firebase-analytics = {group="com.google.firebase",name="firebase-analytics",version.ref="firebase-analytics"}
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 daggerhilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+
+
 
 

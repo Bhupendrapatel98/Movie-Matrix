@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
-import com.app.moviematrix.R
 import com.app.moviematrix.navigation.NavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,12 +12,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //statusBarColor
+        // statusBarColor
         window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.background)
 
         setContent {
             val navController = rememberNavController()
-            NavGraph(navHostController = navController,this)
+            NavGraph(navHostController = navController, this)
         }
     }
 }
