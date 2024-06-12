@@ -42,6 +42,9 @@ jobs:
         Get-Item moviematrix.jks
 
     - name: Verify Decrypted Keystore
+      env:
+       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      shell: pwsh
       run: |
         keytool -list -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD
         
