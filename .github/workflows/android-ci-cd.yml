@@ -34,15 +34,12 @@ jobs:
     - name: Decrypt and Set up Keystore
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      shell: pwsh
       run: |
-        echo $KEYSTORE_BASE64 | base64 -d > moviematrix.jks
-        echo "Keystore file created:"
-        ls -l moviematrix.jks
-        echo "Keystore file head (first few bytes):"
-        hexdump -C moviematrix.jks | head -n 5
+        $DecodedBytes = [System.Convert]::FromBase64String($env:KEYSTORE_BASE64)
+        [System.IO.File]::WriteAllBytes('moviematrix.jks', $DecodedBytes)
+        Write-Host "Keystore file created:"
+        Get-Item moviematrix.jks
 
     - name: Verify Decrypted Keystore
       run: |
@@ -51,12 +48,12 @@ jobs:
     - name: Decrypt Service Account JSON
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      shell: pwsh
       run: |
-        echo $SERVICE_ACCOUNT_JSON | base64 -d > movie-matrix.json
-        echo "Service Account JSON created:"
-        ls -l movie-matrix.json
-        echo "Service Account JSON head (first few bytes):"
-        head -c 100 movie-matrix.json
+        $DecodedJsonBytes = [System.Convert]::FromBase64String($env:SERVICE_ACCOUNT_JSON)
+        [System.IO.File]::WriteAllBytes('movie-matrix.json', $DecodedJsonBytes)
+        Write-Host "Service Account JSON created:"
+        Get-Item movie-matrix.json
 
     - name: Build APK
       run: ./gradlew assembleRelease
