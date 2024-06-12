@@ -75,6 +75,13 @@ jobs:
     #   run: |
     #     zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
 
+    - name: Set up Android SDK
+      run: |
+       curl -o android-sdk.zip https://dl.google.com/android/repository/commandlinetools-win-6858069_latest.zip
+       Expand-Archive -Path android-sdk.zip -DestinationPath $env:ANDROID_SDK_ROOT
+       $env:PATH += ";$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin"
+       sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+    
     - name: Verify APK
       run: |
         apksigner verify app/build/outputs/apk/release/app-release.apk
