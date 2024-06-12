@@ -109,8 +109,13 @@ jobs:
       shell: pwsh
       run: |
         echo "Verifying APK with apksigner"
-        # Use the full path to apksigner for verification
-        & "$env:ANDROID_SDK_ROOT\build-tools\31.0.0\apksigner.bat" verify app/build/outputs/apk/release/app-release.apk
+        $apkPath = "app\build\outputs\apk\release\app-release.apk"
+        if (Test-Path -Path $apkPath) {
+          & "$env:ANDROID_SDK_ROOT\build-tools\31.0.0\apksigner.bat" verify $apkPath
+        } else {
+          Write-Host "APK does not exist for verification: $apkPath"
+          exit 1
+        }
 
     - name: Upload Signed APK
       uses: actions/upload-artifact@v2
