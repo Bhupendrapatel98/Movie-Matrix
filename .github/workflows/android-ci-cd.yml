@@ -57,19 +57,6 @@ jobs:
         [System.IO.File]::WriteAllBytes('movie-matrix.json', $DecodedJsonBytes)
         Write-Host "Service Account JSON created:"
         Get-Item movie-matrix.json
-
-    - name: Build APK
-      run: ./gradlew assembleRelease
-
-    - name: Sign APK
-      env:
-        JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      run: |
-        echo "Signing APK with alias: $env:KEY_ALIAS"
-        jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $env:KEY_ALIAS
         
     # - name: Align APK
     #   run: |
@@ -95,6 +82,29 @@ jobs:
         # Install required SDK packages
         cmd /c "`"$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat`" --sdk_root=$env:ANDROID_SDK_ROOT `"`"platform-tools`"`" `"`"platforms;android-31`"`" `"`"build-tools;31.0.0`"`""
 
+    - name: Build APK
+      run: ./gradlew assembleRelease
+
+    - name: Check APK Existence
+      shell: pwsh
+      run: |
+        if (Test-Path -Path app\build\outputs\apk\release\app-release-unsigned.apk) {
+          Write-Host "APK exists."
+        } else {
+          Write-Host "APK does not exist."
+          exit 1
+        }
+
+    - name: Sign APK
+      env:
+        JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      run: |
+        echo "Signing APK with alias: $env:KEY_ALIAS"
+        jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $env:KEY_ALIAS
+        
     - name: Verify APK
       shell: pwsh
       run: |
