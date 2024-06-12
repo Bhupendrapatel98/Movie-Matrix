@@ -71,9 +71,9 @@ jobs:
         echo "Signing APK with alias: $env:KEY_ALIAS"
         jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $env:KEY_ALIAS
         
-    - name: Align APK
-      run: |
-        zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+    # - name: Align APK
+    #   run: |
+    #     zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
 
     - name: Verify APK
       run: |
