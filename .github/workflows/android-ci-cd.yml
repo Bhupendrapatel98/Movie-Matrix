@@ -39,14 +39,19 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         echo $KEYSTORE_BASE64 | base64 -d > moviematrix.jks
-        # Verify the file was created correctly
+        file moviematrix.jks
         ls -l moviematrix.jks
+
+    - name: Verify Decrypted Keystore
+      run: |
+        keytool -list -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD
         
     - name: Decrypt Service Account JSON
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       run: |
-        echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
+        echo $SERVICE_ACCOUNT_JSON | base64 -d > movie-matrix.json
+        ls -l movie-matrix.json
 
     - name: Build APK
       run: ./gradlew assembleRelease
