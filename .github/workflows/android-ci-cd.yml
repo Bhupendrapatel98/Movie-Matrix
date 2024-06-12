@@ -39,6 +39,11 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         echo $KEYSTORE_BASE64 | base64 --decode > my-release-key.jks
+        # Debugging step to verify alias variable
+        echo "Key Alias: $KEY_ALIAS"
+        # Also output environment variables to verify correct settings
+        echo $KEY_ALIAS > key-alias.txt
+        echo $KEY_ALIAS | Out-File -FilePath key-alias-ps.txt
 
     - name: Decrypt Service Account JSON
       env:
@@ -52,20 +57,29 @@ jobs:
     - name: Sign APK
       run: |
         jarsigner -verbose -keystore my-release-key.jks -storepass $KEYSTORE_PASSWORD -keypass $KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $KEY_ALIAS
-
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
+        # Directly specify alias if environment variable isn't working
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        
     - name: Align APK
       run: |
         zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
 
     - name: Verify APK
       run: |
-        apksigner verify app-release.apk
+        apksigner verify app/build/outputs/apk/release/app-release.apk
 
     - name: Upload Signed APK
       uses: actions/upload-artifact@v2
       with:
         name: app-release
         path: app/build/outputs/apk/release/app-release.apk
+
+    - name: Install Fastlane
+      run: gem install fastlane
 
     - name: Deploy to Google Play
       env:
