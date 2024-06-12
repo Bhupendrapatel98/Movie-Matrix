@@ -38,15 +38,15 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        echo $KEYSTORE_BASE64 | base64 --decode > my-release-key.jks
-        # Debugging step to verify alias variable
-        echo "Key Alias: $env:KEY_ALIAS"
+        echo $KEYSTORE_BASE64 | base64 -d > moviematrix.jks
+        # Verify the file was created correctly
+        ls -l moviematrix.jks
         
     - name: Decrypt Service Account JSON
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       run: |
-        echo $SERVICE_ACCOUNT_JSON | base64 --decode > service-account.json
+        echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
 
     - name: Build APK
       run: ./gradlew assembleRelease
@@ -59,7 +59,7 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       run: |
         echo "Signing APK with alias: $env:KEY_ALIAS"
-        jarsigner -verbose -keystore my-release-key.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $env:KEY_ALIAS
+        jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $env:KEY_ALIAS
         
     - name: Align APK
       run: |
@@ -82,5 +82,5 @@ jobs:
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       run: |
-        echo $SERVICE_ACCOUNT_JSON | base64 --decode > service-account.json
+        echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
         bundle exec fastlane android deploy
