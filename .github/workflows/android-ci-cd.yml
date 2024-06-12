@@ -131,15 +131,17 @@ jobs:
         name: app-release
         path: app/build/outputs/apk/release/app-release.apk
 
-    - name: Install Bundler and Fastlane
+    - name: Install Fastlane
       shell: pwsh
       run: |
-        gem install bundler
-        bundle install
+        echo "Installing Fastlane"
+        gem install fastlane --no-document
+        fastlane -v
 
     - name: Deploy to Google Play
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      shell: pwsh
       run: |
         echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
-        bundle exec fastlane android deploy
+        fastlane android deploy
