@@ -144,4 +144,4 @@ jobs:
       shell: pwsh
       run: |
         echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
-        fastlane android deploy
+        fastlane android deploy --disable_interaction
