@@ -95,7 +95,7 @@ jobs:
           exit 1
         }
 
-    - name: Sign APK
+    - name: Sign APK with apksigner
       env:
         JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -104,8 +104,8 @@ jobs:
       run: |
         $unsignedApkPath = "app\build\outputs\apk\release\app-release-unsigned.apk"
         $signedApkPath = "app\build\outputs\apk\release\app-release.apk"
-        echo "Signing APK with alias: $env:KEY_ALIAS"
-        jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar $signedApkPath $unsignedApkPath $env:KEY_ALIAS
+        echo "Signing APK with apksigner"
+        & "$env:ANDROID_SDK_ROOT\build-tools\31.0.0\apksigner.bat" sign --ks moviematrix.jks --ks-key-alias $env:KEY_ALIAS --ks-pass pass:$env:KEYSTORE_PASSWORD --key-pass pass:$env:KEY_PASSWORD --out $signedApkPath $unsignedApkPath
         if (Test-Path -Path $signedApkPath) {
           Write-Host "Signed APK exists: $signedApkPath"
         } else {
