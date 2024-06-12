@@ -39,8 +39,10 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         echo $KEYSTORE_BASE64 | base64 -d > moviematrix.jks
-        file moviematrix.jks
+        echo "Keystore file created:"
         ls -l moviematrix.jks
+        echo "Keystore file head (first few bytes):"
+        hexdump -C moviematrix.jks | head -n 5
 
     - name: Verify Decrypted Keystore
       run: |
@@ -51,7 +53,10 @@ jobs:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       run: |
         echo $SERVICE_ACCOUNT_JSON | base64 -d > movie-matrix.json
+        echo "Service Account JSON created:"
         ls -l movie-matrix.json
+        echo "Service Account JSON head (first few bytes):"
+        head -c 100 movie-matrix.json
 
     - name: Build APK
       run: ./gradlew assembleRelease
