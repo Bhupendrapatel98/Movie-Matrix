@@ -35,19 +35,23 @@ jobs:
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         echo $KEYSTORE_BASE64 | base64 --decode > my-release-key.jks
+
+    - name: Decrypt Service Account JSON
+      env:
+        SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      run: |
+        echo $SERVICE_ACCOUNT_JSON | base64 --decode > service-account.json
 
     - name: Build APK
       run: ./gradlew assembleRelease
 
     - name: Sign APK
-      env:
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        jarsigner -verbose -keystore my-release-key.jks -storepass $KEYSTORE_PASSWORD -keypass $KEY_PASSWORD app/build/outputs/apk/release/app-release-unsigned.apk moviematrix
+        jarsigner -verbose -keystore my-release-key.jks -storepass $KEYSTORE_PASSWORD -keypass $KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $KEY_ALIAS
 
     - name: Align APK
       run: |
@@ -55,7 +59,7 @@ jobs:
 
     - name: Verify APK
       run: |
-        apksigner verify app/build/outputs/apk/release/app-release.apk
+        apksigner verify app-release.apk
 
     - name: Upload Signed APK
       uses: actions/upload-artifact@v2
