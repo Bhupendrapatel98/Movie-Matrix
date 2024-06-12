@@ -102,8 +102,16 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       run: |
+        $unsignedApkPath = "app\build\outputs\apk\release\app-release-unsigned.apk"
+        $signedApkPath = "app\build\outputs\apk\release\app-release.apk"
         echo "Signing APK with alias: $env:KEY_ALIAS"
-        jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk $env:KEY_ALIAS
+        jarsigner -verbose -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar $signedApkPath $unsignedApkPath $env:KEY_ALIAS
+        if (Test-Path -Path $signedApkPath) {
+          Write-Host "Signed APK exists: $signedApkPath"
+        } else {
+          Write-Host "Signed APK does not exist: $signedApkPath"
+          exit 1
+        }
         
     - name: Verify APK
       shell: pwsh
