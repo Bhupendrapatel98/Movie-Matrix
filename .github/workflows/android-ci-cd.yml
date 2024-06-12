@@ -78,22 +78,29 @@ jobs:
     - name: Set up Android SDK
       shell: pwsh
       run: |
-       $ANDROID_SDK_ROOT = "$env:RUNNER_TEMP\android-sdk"
-        New-Item -ItemType Directory -Path $ANDROID_SDK_ROOT
-        curl -o android-sdk.zip https://dl.google.com/android/repository/commandlinetools-win-8092744_latest.zip
-        Expand-Archive -Path android-sdk.zip -DestinationPath $ANDROID_SDK_ROOT
-        Move-Item -Path "$ANDROID_SDK_ROOT\cmdline-tools" -Destination "$ANDROID_SDK_ROOT\cmdline-tools-latest"
-        New-Item -ItemType Directory -Path "$ANDROID_SDK_ROOT\cmdline-tools"
-        Move-Item -Path "$ANDROID_SDK_ROOT\cmdline-tools-latest" -Destination "$ANDROID_SDK_ROOT\cmdline-tools\latest"
-        $env:PATH += ";$ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$ANDROID_SDK_ROOT\platform-tools"
-        sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-31" "build-tools;31.0.0"
-    
+       # Set up environment variable for Android SDK
+        $env:ANDROID_SDK_ROOT = "$env:RUNNER_TEMP\android-sdk"
+        New-Item -ItemType Directory -Path $env:ANDROID_SDK_ROOT
+
+       # Download and extract command line tools
+        Invoke-WebRequest -Uri https://dl.google.com/android/repository/commandlinetools-win-8092744_latest.zip -OutFile android-sdk.zip
+        Expand-Archive -Path android-sdk.zip -DestinationPath $env:ANDROID_SDK_ROOT
+        Move-Item -Path "$env:ANDROID_SDK_ROOT\cmdline-tools" -Destination "$env:ANDROID_SDK_ROOT\cmdline-tools-latest"
+        New-Item -ItemType Directory -Path "$env:ANDROID_SDK_ROOT\cmdline-tools"
+        Move-Item -Path "$env:ANDROID_SDK_ROOT\cmdline-tools-latest" -Destination "$env:ANDROID_SDK_ROOT\cmdline-tools\latest"
+
+        # Update PATH environment variable for the current job
+        $env:PATH += ";$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:ANDROID_SDK_ROOT\build-tools\31.0.0"
+
+        # Install required SDK packages
+        cmd /c "`"$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat`" --sdk_root=$env:ANDROID_SDK_ROOT `"`"platform-tools`"`" `"`"platforms;android-31`"`" `"`"build-tools;31.0.0`"`""
+
     - name: Verify APK
-      run: |
-        apksigner verify app/build/outputs/apk/release/app-release.apk
       shell: pwsh
-      env:
-        PATH: ${{ env.PATH }};$ANDROID_SDK_ROOT\build-tools\31.0.0
+      run: |
+        echo "Verifying APK with apksigner"
+        # Use the full path to apksigner for verification
+        & "$env:ANDROID_SDK_ROOT\build-tools\31.0.0\apksigner.bat" verify app/build/outputs/apk/release/app-release.apk
 
     - name: Upload Signed APK
       uses: actions/upload-artifact@v2
