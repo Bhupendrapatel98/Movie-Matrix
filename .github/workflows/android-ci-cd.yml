@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - development
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   build:
@@ -20,11 +21,51 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Build APK
-      run: ./gradlew assembleDebug
+    - name: Run Unit Tests
+      run: ./gradlew testDebugUnitTest
 
-    - name: Upload APK
+    - name: Upload Test Report
+      if: failure() || success()
       uses: actions/upload-artifact@v2
       with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: test-report
+        path: app/build/reports/tests/testDebugUnitTest
+
+    - name: Decrypt and Set up Keystore
+      env:
+        KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      run: |
+        echo $KEYSTORE_BASE64 | base64 --decode > my-release-key.jks
+
+    - name: Build APK
+      run: ./gradlew assembleRelease
+
+    - name: Sign APK
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        jarsigner -verbose -keystore my-release-key.jks -storepass $KEYSTORE_PASSWORD -keypass $KEY_PASSWORD app/build/outputs/apk/release/app-release-unsigned.apk moviematrix
+
+    - name: Align APK
+      run: |
+        zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+
+    - name: Verify APK
+      run: |
+        apksigner verify app/build/outputs/apk/release/app-release.apk
+
+    - name: Upload Signed APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release
+        path: app/build/outputs/apk/release/app-release.apk
+
+    - name: Deploy to Google Play
+      env:
+        SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      run: |
+        echo $SERVICE_ACCOUNT_JSON | base64 --decode > service-account.json
+        bundle exec fastlane android deploy
