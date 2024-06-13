@@ -12,18 +12,22 @@ jobs:
     runs-on: windows-latest
     
     steps:
+     # Step 1: Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v2
 
+     # Step 2: Set up Java
     - name: Set up Java
       uses: actions/setup-java@v2
       with:
         java-version: '17'
         distribution: 'adopt'
 
+     # Step 3: Run unit tests
     - name: Run Unit Tests
       run: ./gradlew testDebugUnitTest
 
+     # Step 4: Upload test report
     - name: Upload Test Report
       if: failure() || success()
       uses: actions/upload-artifact@v2
@@ -31,6 +35,7 @@ jobs:
         name: test-report
         path: app/build/reports/tests/testDebugUnitTest
 
+     # Step 5: Decrypt and set up keystore
     - name: Decrypt and Set up Keystore
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -41,13 +46,15 @@ jobs:
         Write-Host "Keystore file created:"
         Get-Item moviematrix.jks
 
+     # Step 6: Verify decrypted keystore
     - name: Verify Decrypted Keystore
       env:
        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       shell: pwsh
       run: |
         keytool -list -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD
-        
+
+     # Step 7: Decrypt service account JSON
     - name: Decrypt Service Account JSON
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
@@ -62,6 +69,7 @@ jobs:
     #   run: |
     #     zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
 
+     # Step 8: Set up Android SDK
     - name: Set up Android SDK
       shell: pwsh
       run: |
@@ -82,9 +90,11 @@ jobs:
         # Install required SDK packages
         cmd /c "`"$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat`" --sdk_root=$env:ANDROID_SDK_ROOT `"`"platform-tools`"`" `"`"platforms;android-31`"`" `"`"build-tools;31.0.0`"`""
 
+     # Step 9: Build APK
     - name: Build APK
       run: ./gradlew assembleRelease
 
+     # Step 10: Check APK existence
     - name: Check APK Existence
       shell: pwsh
       run: |
@@ -95,6 +105,7 @@ jobs:
           exit 1
         }
 
+     # Step 11: Sign APK with apksigner
     - name: Sign APK with apksigner
       env:
         JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
@@ -112,7 +123,8 @@ jobs:
           Write-Host "Signed APK does not exist: $signedApkPath"
           exit 1
         }
-        
+
+     # Step 12: Verify APK
     - name: Verify APK
       shell: pwsh
       run: |
@@ -125,22 +137,25 @@ jobs:
           exit 1
         }
 
+     # Step 13: Upload signed APK
     - name: Upload Signed APK
       uses: actions/upload-artifact@v2
       with:
         name: app-release
         path: app/build/outputs/apk/release/app-release.apk
 
+     # Step 14: Install Bundler and Fastlane
     - name: Install Bundler and Fastlane
-      shell: pwsh
+      shell: bash
       run: |
         echo "Installing Bundler and Fastlane"
         gem install bundler --no-document
         bundle install
 
+     # Step 15: Deploy to Google Play
     - name: Deploy to Google Play
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-      shell: pwsh
+      shell: bash
       run: |
         bundle exec fastlane android deploy
