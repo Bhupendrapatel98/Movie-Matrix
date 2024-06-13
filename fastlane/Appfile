@@ -1,0 +1,2 @@
+json_key_file("C:\Users\shubham\Desktop\movie-matrix\movie-matrix.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.app.moviematrix") # e.g. com.krausefx.app
