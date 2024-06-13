@@ -150,8 +150,10 @@ jobs:
         echo "Installing Bundler and Fastlane"
         choco install -y ruby
         gem install bundler --no-document
-        echo "source 'https://rubygems.org'\ngem 'fastlane', '~> 2.220.0'" > Gemfile
-        bundle install --without nkf
+        # Create Gemfile correctly without newlines
+        echo 'source "https://rubygems.org"\ngem "fastlane", "~> 2.220.0"' > Gemfile
+        bundle config set without 'nkf'
+        bundle install
       env:
         JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
 
