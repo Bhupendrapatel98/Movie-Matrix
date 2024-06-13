@@ -9,7 +9,8 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    #runs-on: windows-latest
     
     steps:
      # Step 1: Checkout the repository
@@ -146,11 +147,13 @@ jobs:
 
      # Step 14: Install Bundler and Fastlane
     - name: Install Bundler and Fastlane
-      shell: bash
       run: |
         echo "Installing Bundler and Fastlane"
+        sudo apt-get install -y ruby-full
         gem install bundler --no-document
-        bundle install
+        gem install fastlane --no-document
+      env:
+        JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
 
      # Step 15: Deploy to Google Play
     - name: Deploy to Google Play
@@ -158,4 +161,5 @@ jobs:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       shell: bash
       run: |
-        bundle exec fastlane android deploy
+         echo $SERVICE_ACCOUNT_JSON > movie-matrix.json
+         fastlane supply --json_key movie-matrix.json --package_name com.app.moviematrix --apk app/build/outputs/apk/release/app-release.apk
