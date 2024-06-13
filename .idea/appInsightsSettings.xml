@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.app.moviematrix" />
+                  <option name="mobileSdkAppId" value="1:381562083786:android:39a57511b502df8edc9733" />
+                  <option name="projectId" value="movie-matrix-a8774" />
+                  <option name="projectNumber" value="381562083786" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
