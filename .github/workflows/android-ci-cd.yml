@@ -34,28 +34,96 @@ jobs:
     - name: Decrypt and Set up Keystore
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      shell: pwsh
       run: |
-        echo $KEYSTORE_BASE64 | base64 --decode > my-release-key.jks
+        $DecodedBytes = [System.Convert]::FromBase64String($env:KEYSTORE_BASE64)
+        [System.IO.File]::WriteAllBytes('moviematrix.jks', $DecodedBytes)
+        Write-Host "Keystore file created:"
+        Get-Item moviematrix.jks
+
+    - name: Verify Decrypted Keystore
+      env:
+       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      shell: pwsh
+      run: |
+        keytool -list -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD
+        
+    - name: Decrypt Service Account JSON
+      env:
+        SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      shell: pwsh
+      run: |
+        $DecodedJsonBytes = [System.Convert]::FromBase64String($env:SERVICE_ACCOUNT_JSON)
+        [System.IO.File]::WriteAllBytes('movie-matrix.json', $DecodedJsonBytes)
+        Write-Host "Service Account JSON created:"
+        Get-Item movie-matrix.json
+        
+    # - name: Align APK
+    #   run: |
+    #     zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+
+    - name: Set up Android SDK
+      shell: pwsh
+      run: |
+       # Set up environment variable for Android SDK
+        $env:ANDROID_SDK_ROOT = "$env:RUNNER_TEMP\android-sdk"
+        New-Item -ItemType Directory -Path $env:ANDROID_SDK_ROOT
+
+       # Download and extract command line tools
+        Invoke-WebRequest -Uri https://dl.google.com/android/repository/commandlinetools-win-8092744_latest.zip -OutFile android-sdk.zip
+        Expand-Archive -Path android-sdk.zip -DestinationPath $env:ANDROID_SDK_ROOT
+        Move-Item -Path "$env:ANDROID_SDK_ROOT\cmdline-tools" -Destination "$env:ANDROID_SDK_ROOT\cmdline-tools-latest"
+        New-Item -ItemType Directory -Path "$env:ANDROID_SDK_ROOT\cmdline-tools"
+        Move-Item -Path "$env:ANDROID_SDK_ROOT\cmdline-tools-latest" -Destination "$env:ANDROID_SDK_ROOT\cmdline-tools\latest"
+
+        # Update PATH environment variable for the current job
+        $env:PATH += ";$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin;$env:ANDROID_SDK_ROOT\platform-tools;$env:ANDROID_SDK_ROOT\build-tools\31.0.0"
+
+        # Install required SDK packages
+        cmd /c "`"$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat`" --sdk_root=$env:ANDROID_SDK_ROOT `"`"platform-tools`"`" `"`"platforms;android-31`"`" `"`"build-tools;31.0.0`"`""
 
     - name: Build APK
       run: ./gradlew assembleRelease
 
-    - name: Sign APK
+    - name: Check APK Existence
+      shell: pwsh
+      run: |
+        if (Test-Path -Path app\build\outputs\apk\release\app-release-unsigned.apk) {
+          Write-Host "APK exists."
+        } else {
+          Write-Host "APK does not exist."
+          exit 1
+        }
+
+    - name: Sign APK with apksigner
       env:
+        JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       run: |
-        jarsigner -verbose -keystore my-release-key.jks -storepass $KEYSTORE_PASSWORD -keypass $KEY_PASSWORD app/build/outputs/apk/release/app-release-unsigned.apk moviematrix
-
-    - name: Align APK
-      run: |
-        zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
-
+        $unsignedApkPath = "app\build\outputs\apk\release\app-release-unsigned.apk"
+        $signedApkPath = "app\build\outputs\apk\release\app-release.apk"
+        echo "Signing APK with apksigner"
+        & "$env:ANDROID_SDK_ROOT\build-tools\31.0.0\apksigner.bat" sign --ks moviematrix.jks --ks-key-alias $env:KEY_ALIAS --ks-pass pass:$env:KEYSTORE_PASSWORD --key-pass pass:$env:KEY_PASSWORD --out $signedApkPath $unsignedApkPath
+        if (Test-Path -Path $signedApkPath) {
+          Write-Host "Signed APK exists: $signedApkPath"
+        } else {
+          Write-Host "Signed APK does not exist: $signedApkPath"
+          exit 1
+        }
+        
     - name: Verify APK
+      shell: pwsh
       run: |
-        apksigner verify app/build/outputs/apk/release/app-release.apk
+        echo "Verifying APK with apksigner"
+        $apkPath = "app\build\outputs\apk\release\app-release.apk"
+        if (Test-Path -Path $apkPath) {
+          & "$env:ANDROID_SDK_ROOT\build-tools\31.0.0\apksigner.bat" verify $apkPath
+        } else {
+          Write-Host "APK does not exist for verification: $apkPath"
+          exit 1
+        }
 
     - name: Upload Signed APK
       uses: actions/upload-artifact@v2
@@ -63,9 +131,17 @@ jobs:
         name: app-release
         path: app/build/outputs/apk/release/app-release.apk
 
+    - name: Install Fastlane
+      shell: pwsh
+      run: |
+        echo "Installing Fastlane"
+        gem install fastlane --no-document
+        fastlane -v
+
     - name: Deploy to Google Play
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      shell: pwsh
       run: |
-        echo $SERVICE_ACCOUNT_JSON | base64 --decode > service-account.json
-        bundle exec fastlane android deploy
+        echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
+        fastlane android deploy
