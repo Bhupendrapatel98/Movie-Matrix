@@ -9,8 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    #runs-on: windows-latest
+    runs-on: windows-latest
     
     steps:
      # Step 1: Checkout the repository
@@ -149,11 +148,12 @@ jobs:
     - name: Install Bundler and Fastlane
       run: |
         echo "Installing Bundler and Fastlane"
-        sudo apt-get install -y ruby-full
+        choco install -y ruby
         gem install bundler --no-document
-        gem install fastlane --no-document
+        echo "source 'https://rubygems.org'\ngem 'fastlane', '~> 2.220.0'" > Gemfile
+        bundle install --without nkf
       env:
-        JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+        JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
 
      # Step 15: Deploy to Google Play
     - name: Deploy to Google Play
@@ -162,4 +162,4 @@ jobs:
       shell: bash
       run: |
          echo $SERVICE_ACCOUNT_JSON > movie-matrix.json
-         fastlane supply --json_key movie-matrix.json --package_name com.app.moviematrix --apk app/build/outputs/apk/release/app-release.apk
+         bundle exec fastlane supply --json_key movie-matrix.json --package_name com.app.moviematrix --apk app/build/outputs/apk/release/app-release.apk
