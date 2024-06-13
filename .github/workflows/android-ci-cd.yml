@@ -143,5 +143,4 @@ jobs:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       shell: pwsh
       run: |
-        echo $SERVICE_ACCOUNT_JSON | base64 --decode > movie-matrix.json
         bundle exec fastlane android deploy
