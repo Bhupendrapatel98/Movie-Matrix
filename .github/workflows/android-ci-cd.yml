@@ -179,8 +179,15 @@ jobs:
           name: app-release-aab
           path: app/build/outputs/bundle/release
 
-      - name: Create service_account.json
-        run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
+      - name: Decrypt Service Account JSON
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        shell: pwsh
+        run: |
+          $DecodedJsonBytes = [System.Convert]::FromBase64String($env:SERVICE_ACCOUNT_JSON)
+          [System.IO.File]::WriteAllBytes('service_account.json', $DecodedJsonBytes)
+          Write-Host "Service Account JSON created:"
+          Get-Item service_account.json
 
       - name: Deploy to Play Store
         uses: r0adkll/upload-google-play@v1
