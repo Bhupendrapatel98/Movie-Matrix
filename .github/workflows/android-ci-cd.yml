@@ -144,19 +144,20 @@ jobs:
         name: app-release
         path: app/build/outputs/apk/release/app-release.apk
 
-     # Step 14: Install Bundler and Fastlane
+     # Step 14: Install Bundler Fastlane, and NKF
     - name: Install Bundler and Fastlane
       run: |
         echo "Installing Bundler and Fastlane"
         choco install -y ruby
         gem install bundler --no-document
-        # Create Gemfile correctly correctly without escape sequences
+        # Install nkf manually before running bundle install
+        gem install nkf --no-document
+        # Create Gemfile correctly without escape sequences
         $gemfileContent = @"
-        source 'https://rubygems.org'
-        gem 'fastlane', '~> 2.220.0'
-        "@
+         source 'https://rubygems.org'
+         gem 'fastlane', '~> 2.220.0'
+         "@
         $gemfileContent | Out-File -FilePath Gemfile -Encoding utf8
-        bundle config set without 'nkf'
         bundle install
       env:
         JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
