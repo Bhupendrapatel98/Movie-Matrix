@@ -150,8 +150,8 @@ jobs:
         echo "Installing Bundler and Fastlane"
         choco install -y ruby
         gem install bundler --no-document
-        # Install nkf manually before running bundle install
-        gem install nkf --no-document
+        # Install CFPropertyList manually before running bundle install
+        gem install CFPropertyList --no-document
         # Create Gemfile correctly without escape sequences
         $gemfileContent = @'
         source 'https://rubygems.org' 
@@ -159,7 +159,7 @@ jobs:
         '@
         $gemfileContent | Out-File -FilePath Gemfile -Encoding utf8
         bundle install
-        shell: pwsh
+      shell: pwsh
       env:
         JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
 
