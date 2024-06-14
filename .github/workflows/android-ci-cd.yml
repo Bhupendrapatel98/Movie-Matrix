@@ -145,25 +145,25 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
 
       # Step 13: Upload signed APK
-      deploy:
-        name: Deploy release AAB on Play Store
-        needs: [ build ]
-        runs-on: ubuntu-latest
+  deploy:
+    name: Deploy release AAB on Play Store
+    needs: [ build ]
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-        - name: Create service_account.json
-          run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
+      - name: Create service_account.json
+        run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
 
-        - name: Deploy to Play Store
-          uses: r0adkll/upload-google-play@v1
-          with:
-            serviceAccountJson: service_account.json
-            packageName: ${{ github.event.inputs.app_id }}
-            releaseFiles: app/build/outputs/bundle/release/*.aab
-            track: internal
-            whatsNewDirectory: whatsnew/
-            mappingFile: app/build/outputs/mapping/release/mapping.txt
-            inAppUpdatePriority: 5
+      - name: Deploy to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: service_account.json
+          packageName: ${{ github.event.inputs.app_id }}
+          releaseFiles: app/build/outputs/bundle/release/*.aab
+          track: internal
+          whatsNewDirectory: whatsnew/
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          inAppUpdatePriority: 5
