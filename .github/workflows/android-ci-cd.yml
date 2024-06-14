@@ -145,14 +145,13 @@ jobs:
         path: app/build/outputs/apk/release/app-release.apk
 
     # Step 14: Install Ruby and Bundler
-    - name: Install Ruby and Bundler
+    - name: Install Ruby 2.7 and Bundler
       run: |
-        echo "Installing Ruby and Bundler"
-        choco install -y ruby
+        echo "Installing Ruby 2.7 and Bundler"
+        choco install -y ruby --version=2.7.7
+        ridk install  # This is to ensure msys2 is installed
         gem install bundler --no-document
-        # Manually install CFPropertyList
-        gem install CFPropertyList --no-document
-      shell: pwsh
+      shell: cmd
 
      # Step 15: Setup Fastlane
     - name: Setup Fastlane
@@ -164,6 +163,8 @@ jobs:
         gem 'fastlane', '~> 2.220.0'
         '@
         $gemfileContent | Out-File -FilePath Gemfile -Encoding utf8
+        # Custom installation for nkf
+        gem install nkf --platform=ruby
         bundle install
       shell: pwsh
 
