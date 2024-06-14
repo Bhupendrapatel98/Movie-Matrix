@@ -144,15 +144,21 @@ jobs:
         name: app-release
         path: app/build/outputs/apk/release/app-release.apk
 
-     # Step 14: Install Bundler Fastlane, and NKF
-    - name: Install Bundler and Fastlane
+    # Step 14: Install Ruby and Bundler
+    - name: Install Ruby and Bundler
       run: |
-        echo "Installing Bundler and Fastlane"
+        echo "Installing Ruby and Bundler"
         choco install -y ruby
         gem install bundler --no-document
-        # Install CFPropertyList manually before running bundle install
+        # Manually install CFPropertyList
         gem install CFPropertyList --no-document
-        # Create Gemfile correctly without escape sequences
+      shell: pwsh
+
+     # Step 15: Setup Fastlane
+    - name: Setup Fastlane
+      run: |
+        echo "Setting up Fastlane"
+        # Create Gemfile correctly
         $gemfileContent = @'
         source 'https://rubygems.org' 
         gem 'fastlane', '~> 2.220.0'
@@ -160,8 +166,6 @@ jobs:
         $gemfileContent | Out-File -FilePath Gemfile -Encoding utf8
         bundle install
       shell: pwsh
-      env:
-        JAVA_HOME: C:\hostedtoolcache\windows\Java_Adopt_jdk\17.0.11-9\x64
 
      # Step 15: Deploy to Google Play
     - name: Deploy to Google Play
