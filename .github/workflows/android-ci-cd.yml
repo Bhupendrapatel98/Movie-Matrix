@@ -161,7 +161,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
-          packageName: ${{ com.app.moviematrix }}
+          packageName: "com.app.moviematrix"
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: internal
           whatsNewDirectory: whatsnew/
