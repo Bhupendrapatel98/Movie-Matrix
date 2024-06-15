@@ -154,16 +154,48 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+       # Step 14: Build AAB
       - name: Build AAB
         run: ./gradlew bundleRelease
 
+      # Step 15: Sign AAB with jarsigner
+      - name: Sign AAB with jarsigner
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          $unsignedAabPath = "app/build/outputs/bundle/release/app-release.aab"
+          $signedAabPath = "app/build/outputs/bundle/release/app-release-signed.aab"
+          echo "Signing AAB with jarsigner"
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore moviematrix.jks -storepass $env:KEYSTORE_PASSWORD -keypass $env:KEY_PASSWORD -signedjar $signedAabPath $unsignedAabPath $env:KEY_ALIAS
+          if (Test-Path -Path $signedAabPath) {
+            Write-Host "Signed AAB exists: $signedAabPath"
+          } else {
+            Write-Host "Signed AAB does not exist: $signedAabPath"
+            exit 1
+          }
+
+      # Step 16: Verify AAB
+      - name: Verify AAB
+        shell: pwsh
+        run: |
+          echo "Verifying AAB with jarsigner"
+          $aabPath = "app/build/outputs/bundle/release/app-release-signed.aab"
+          if (Test-Path -Path $aabPath) {
+            jarsigner -verify -verbose -certs $aabPath
+          } else {
+            Write-Host "AAB does not exist for verification: $aabPath"
+            exit 1
+          }
+
+      # Step 17: Upload signed AAB
       - name: Upload AAB
         uses: actions/upload-artifact@v2
         with:
           name: app-release-aab
-          path: app/build/outputs/bundle/release/*.aab
+          path: app/build/outputs/bundle/release/app-release-signed.aab
 
-      # Step 13: Upload signed APK
   deploy:
     name: Deploy release AAB on Play Store
     needs: [ build ]
@@ -194,7 +226,7 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: "com.app.moviematrix"
-          releaseFiles: app/build/outputs/bundle/release/*.aab
+          releaseFiles: app/build/outputs/bundle/release/app-release-signed.aab
           track: internal
           whatsNewDirectory: whatsnew/
           mappingFile: app/build/outputs/mapping/release/mapping.txt
