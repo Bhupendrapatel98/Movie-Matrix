@@ -228,6 +228,4 @@ jobs:
           packageName: "com.app.moviematrix"
           releaseFiles: app/build/outputs/bundle/release/app-release-signed.aab
           track: internal
-          whatsNewDirectory: whatsnew/
-          mappingFile: app/build/outputs/mapping/release/mapping.txt
           inAppUpdatePriority: 5
