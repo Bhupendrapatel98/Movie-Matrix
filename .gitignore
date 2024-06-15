@@ -13,6 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-
-# Ignore gradle.properties containing sensitive information
-/gradle.properties
