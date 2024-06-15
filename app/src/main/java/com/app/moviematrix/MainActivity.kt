@@ -3,21 +3,45 @@ package com.app.moviematrix
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.content.ContextCompat
-import androidx.navigation.compose.rememberNavController
-import com.app.moviematrix.navigation.NavGraph
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.app.moviematrix.ui.theme.MovieMatrixTheme
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // statusBarColor
-        window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.background)
-
+        enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            NavGraph(navHostController = navController, this)
+            MovieMatrixTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Greeting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    MovieMatrixTheme {
+        Greeting("Android")
     }
 }
