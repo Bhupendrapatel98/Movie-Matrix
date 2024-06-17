@@ -14,4 +14,9 @@ interface ApiService {
     suspend fun getTrendingMovie(
         @Query("api_key") key: String,
     ): TrendingResponse
+
+    @GET("trending/tv/day")
+    suspend fun getTrendingTvShow(
+        @Query("api_key") key: String,
+    ): TrendingResponse
 }

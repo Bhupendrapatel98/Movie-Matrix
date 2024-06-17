@@ -32,4 +32,14 @@ constructor(private val repository: TrendingRepository) {
         }.catch {
             emit(Resource.failed(it.message.toString()))
         }
+
+    suspend fun getTrendingTvShow(apiKey: String): Flow<Resource<TrendingResponse>> =
+        flow {
+            emit(Resource.loading())
+            emit(Resource.success(repository.getTrendingTvShow(apiKey)))
+        }.retry(1) { e ->
+            e is IOException
+        }.catch {
+            emit(Resource.failed(it.message.toString()))
+        }
 }

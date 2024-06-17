@@ -15,4 +15,8 @@ constructor(private val apiService: ApiService) : TrendingRepository {
     override suspend fun getTrendingMovie(apikey: String): TrendingResponse {
         return apiService.getTrendingMovie(apikey)
     }
+
+    override suspend fun getTrendingTvShow(apikey: String): TrendingResponse {
+        return apiService.getTrendingTvShow(apikey)
+    }
 }

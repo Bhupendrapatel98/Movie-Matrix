@@ -71,8 +71,8 @@ fun Home(
                 context = context
             )
             TrendingMovies(navigationController, viewModel)
-            PopularMovies(navigationController)
-            TopRatedTvShow(navigationController)
+            PopularMovies(navigationController, viewModel)
+            TrendingTvShow(navigationController, viewModel)
         }
     }
 }
@@ -195,13 +195,23 @@ fun TrendingMovies(navigationController: NavController, viewModel: TrendingViewM
 }
 
 @Composable
-fun PopularMovies(navigationController: NavController) {
+fun PopularMovies(navigationController: NavController, viewModel: TrendingViewModel) {
     // CommonListUI("Popular", "Movies", navigationController)
 }
 
 @Composable
-fun TopRatedTvShow(navigationController: NavController) {
-    // CommonListUI("Top Rated", "Tv Show", navigationController)
+fun TrendingTvShow(navigationController: NavController, viewModel: TrendingViewModel) {
+    val trendingTvShow by viewModel.trendingTvShowStateFlow.collectAsState()
+    when (val state = trendingTvShow) {
+        is Resource.Loading -> {
+            CircularProgressIndicator()
+        }
+        is Resource.Success -> {
+            CommonListUI("Trending", "Tv Show", navigationController,state.data.results)
+        }
+
+        is Resource.Failed -> {}
+    }
 }
 
 @Composable
@@ -270,7 +280,7 @@ fun CommonListUI(
                         )
                     }
                     Text(
-                        text = item.original_title.toString(),
+                        text = item.original_title?:item.original_name,
                         fontSize = 16.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
