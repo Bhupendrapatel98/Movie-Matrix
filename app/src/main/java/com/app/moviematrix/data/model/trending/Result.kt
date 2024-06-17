@@ -1,4 +1,4 @@
-package com.app.moviematrix.data.model.trendingperson
+package com.app.moviematrix.data.model.trending
 
 data class Result(
     val adult: Boolean,
@@ -11,4 +11,9 @@ data class Result(
     val original_name: String,
     val popularity: Double,
     val profile_path: String,
+    val backdrop_path: String?,
+    val original_title: String?,
+    val overview: String?,
+    val poster_path: String?,
+    val vote_average: Float?,
 )

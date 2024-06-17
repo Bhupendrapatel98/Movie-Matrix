@@ -1,4 +1,4 @@
-package com.app.moviematrix.data.model.trendingperson
+package com.app.moviematrix.data.model.trending
 
 data class KnownFor(
     val adult: Boolean,

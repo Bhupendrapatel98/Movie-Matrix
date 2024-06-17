@@ -1,8 +1,8 @@
 package com.app.moviematrix.di
 
 import com.app.moviematrix.data.remote.api.ApiService
-import com.app.moviematrix.data.remote.repository.TrendingPersonRepositoryImpl
-import com.app.moviematrix.domain.repository.TrendingPersonRepository
+import com.app.moviematrix.data.remote.repository.TrendingRepositoryImpl
+import com.app.moviematrix.domain.repository.TrendingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,7 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideTrendingPersonRepository(apiService: ApiService): TrendingPersonRepository {
-        return TrendingPersonRepositoryImpl(apiService)
+    fun provideTrendingPersonRepository(apiService: ApiService): TrendingRepository {
+        return TrendingRepositoryImpl(apiService)
     }
 }

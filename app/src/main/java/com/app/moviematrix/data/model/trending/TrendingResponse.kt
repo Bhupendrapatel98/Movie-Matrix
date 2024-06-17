@@ -1,6 +1,6 @@
-package com.app.moviematrix.data.model.trendingperson
+package com.app.moviematrix.data.model.trending
 
-data class TrendingPerson(
+data class TrendingResponse(
     val page: Int,
     val results: List<Result>,
     val total_pages: Int,
