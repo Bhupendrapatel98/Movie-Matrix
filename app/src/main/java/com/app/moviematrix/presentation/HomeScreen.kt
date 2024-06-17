@@ -54,7 +54,8 @@ import com.app.moviematrix.utills.Resource
 fun Home(
     navigationController: NavController,
     context: Context,
-    viewModel: TrendingViewModel = hiltViewModel()
+    viewModel: TrendingViewModel = hiltViewModel(),
+    moviesViewModel: MoviesViewModel = hiltViewModel()
 ) {
     Column {
         Header()
@@ -64,15 +65,16 @@ fun Home(
                 .padding(horizontal = 15.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            SliderBanner()
+            SliderBanner(moviesViewModel)
+            Spacer(modifier = Modifier.height(10.dp))
             getTrendingPersonData(
                 navigationController = navigationController,
                 viewModel,
                 context = context
             )
             TrendingMovies(navigationController, viewModel)
-            PopularMovies(navigationController, viewModel)
             TrendingTvShow(navigationController, viewModel)
+            PopularMovies(navigationController, moviesViewModel)
         }
     }
 }
@@ -136,7 +138,7 @@ fun TrendingPersonList(
                 modifier = Modifier.padding(horizontal = 5.dp),
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/original" + item.profile_path),
+                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w185" + item.profile_path),
                     contentDescription = "Person Image",
                     contentScale = ContentScale.Crop,
                     modifier =
@@ -195,8 +197,19 @@ fun TrendingMovies(navigationController: NavController, viewModel: TrendingViewM
 }
 
 @Composable
-fun PopularMovies(navigationController: NavController, viewModel: TrendingViewModel) {
-    // CommonListUI("Popular", "Movies", navigationController)
+fun PopularMovies(navigationController: NavController, viewModel: MoviesViewModel) {
+    val popularMovieState by viewModel.popularMovieStateFlow.collectAsState()
+    when (val state = popularMovieState) {
+        is Resource.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is Resource.Success -> {
+            CommonListUI("Popular", "Movies", navigationController,state.data.results)
+        }
+
+        is Resource.Failed -> {}
+    }
 }
 
 @Composable
@@ -206,8 +219,9 @@ fun TrendingTvShow(navigationController: NavController, viewModel: TrendingViewM
         is Resource.Loading -> {
             CircularProgressIndicator()
         }
+
         is Resource.Success -> {
-            CommonListUI("Trending", "Tv Show", navigationController,state.data.results)
+            CommonListUI("Trending", "Tv Show", navigationController, state.data.results)
         }
 
         is Resource.Failed -> {}
@@ -254,7 +268,7 @@ fun CommonListUI(
                 ) {
                     Box {
                         Image(
-                            painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/original" + item.poster_path),
+                            painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w185" + item.poster_path),
                             contentDescription = "banner Image",
                             contentScale = ContentScale.Crop,
                             modifier =
@@ -280,7 +294,7 @@ fun CommonListUI(
                         )
                     }
                     Text(
-                        text = item.original_title?:item.original_name,
+                        text = item.original_title ?: item.original_name,
                         fontSize = 16.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
