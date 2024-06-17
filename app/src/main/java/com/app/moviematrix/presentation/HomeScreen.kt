@@ -135,10 +135,16 @@ fun TrendingPersonList(
         items(list) { item ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(horizontal = 5.dp),
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .width(90.dp),
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w185" + item.profile_path),
+                    painter = rememberAsyncImagePainter(
+                        "https://image.tmdb.org/t/p/w185" + item.profile_path,
+                        placeholder = painterResource(id = R.drawable.imageplaceholder),
+                        error = painterResource(id = R.drawable.imageplaceholder)
+                    ),
                     contentDescription = "Person Image",
                     contentScale = ContentScale.Crop,
                     modifier =
@@ -147,7 +153,11 @@ fun TrendingPersonList(
                         .height(90.dp)
                         .clip(CircleShape),
                 )
-                Text(text = item.name, color = Color.White, modifier = Modifier.padding(top = 8.dp))
+                Text(
+                    text = item.name, color = Color.White, modifier = Modifier.padding(top = 8.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -205,7 +215,7 @@ fun PopularMovies(navigationController: NavController, viewModel: MoviesViewMode
         }
 
         is Resource.Success -> {
-            CommonListUI("Popular", "Movies", navigationController,state.data.results)
+            CommonListUI("Popular", "Movies", navigationController, state.data.results)
         }
 
         is Resource.Failed -> {}

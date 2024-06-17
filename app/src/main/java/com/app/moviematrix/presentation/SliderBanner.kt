@@ -100,7 +100,9 @@ fun bannerContent(list: List<Result>) {
                     },
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/original" + list[page].poster_path),
+                    painter = rememberAsyncImagePainter(
+                        model = "https://image.tmdb.org/t/p/original" + list[page].poster_path,
+                    ),
                     contentDescription = stringResource(R.string.app_name),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
