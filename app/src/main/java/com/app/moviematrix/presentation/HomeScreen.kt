@@ -37,13 +37,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.app.moviematrix.R
-import com.app.moviematrix.data.model.trendingperson.Result
+import com.app.moviematrix.data.model.trending.Result
+import com.app.moviematrix.data.model.trending.TrendingResponse
 import com.app.moviematrix.navigation.MOVIE_LIST
 import com.app.moviematrix.navigation.PERSON_LIST
 import com.app.moviematrix.utills.Resource
@@ -52,20 +54,27 @@ import com.app.moviematrix.utills.Resource
 fun Home(
     navigationController: NavController,
     context: Context,
+    viewModel: TrendingViewModel = hiltViewModel(),
+    moviesViewModel: MoviesViewModel = hiltViewModel()
 ) {
     Column {
         Header()
         Column(
             modifier =
-                Modifier
-                    .padding(horizontal = 15.dp)
-                    .verticalScroll(rememberScrollState()),
+            Modifier
+                .padding(horizontal = 15.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
-            SliderBanner()
-            getTrendingPersonData(navigationController = navigationController, context = context)
-            TrendingMovies(navigationController)
-            PopularMovies(navigationController)
-            TopRatedTvShow(navigationController)
+            SliderBanner(moviesViewModel)
+            Spacer(modifier = Modifier.height(15.dp))
+            getTrendingPersonData(
+                navigationController = navigationController,
+                viewModel,
+                context = context
+            )
+            TrendingMovies(navigationController, viewModel)
+            TrendingTvShow(navigationController, viewModel)
+            PopularMovies(navigationController, moviesViewModel)
         }
     }
 }
@@ -73,7 +82,7 @@ fun Home(
 @Composable
 fun getTrendingPersonData(
     navigationController: NavController,
-    viewModel: TrendingPersonViewModel = hiltViewModel(),
+    viewModel: TrendingViewModel,
     context: Context,
 ) {
     val trendingPersonState by viewModel.trendingPersonStateFlow.collectAsState()
@@ -126,19 +135,32 @@ fun TrendingPersonList(
         items(list) { item ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(horizontal = 5.dp),
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .width(90.dp),
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/original" + item.profile_path),
+                    painter = rememberAsyncImagePainter(
+                        "https://image.tmdb.org/t/p/w185" + item.profile_path,
+                        placeholder = painterResource(id = R.drawable.imageplaceholder2),
+                        error = painterResource(id = R.drawable.imageplaceholder2)
+                    ),
                     contentDescription = "Person Image",
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier
-                            .width(90.dp)
-                            .height(90.dp)
-                            .clip(CircleShape),
+                    Modifier
+                        .width(90.dp)
+                        .height(90.dp)
+                        .clip(CircleShape),
                 )
-                Text(text = item.name, color = Color.White, modifier = Modifier.padding(top = 8.dp))
+                Text(
+                    text = item.name,
+                    fontSize = 14.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(top = 8.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -148,9 +170,9 @@ fun TrendingPersonList(
 fun Header() {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 15.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 15.dp, horizontal = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -170,18 +192,53 @@ fun Header() {
 }
 
 @Composable
-fun TrendingMovies(navigationController: NavController) {
-    CommonListUI("Trending", "Movies", navigationController)
+fun TrendingMovies(navigationController: NavController, viewModel: TrendingViewModel) {
+
+    val trendingMovieState by viewModel.trendingMoviesStateFlow.collectAsState()
+
+    when (val state = trendingMovieState) {
+        is Resource.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is Resource.Success -> {
+            CommonListUI("Trending", "Movies", navigationController, state.data.results)
+        }
+
+        is Resource.Failed -> {}
+    }
 }
 
 @Composable
-fun PopularMovies(navigationController: NavController) {
-    CommonListUI("Popular", "Movies", navigationController)
+fun PopularMovies(navigationController: NavController, viewModel: MoviesViewModel) {
+    val popularMovieState by viewModel.popularMovieStateFlow.collectAsState()
+    when (val state = popularMovieState) {
+        is Resource.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is Resource.Success -> {
+            CommonListUI("Popular", "Movies", navigationController, state.data.results)
+        }
+
+        is Resource.Failed -> {}
+    }
 }
 
 @Composable
-fun TopRatedTvShow(navigationController: NavController) {
-    CommonListUI("Top Rated", "Tv Show", navigationController)
+fun TrendingTvShow(navigationController: NavController, viewModel: TrendingViewModel) {
+    val trendingTvShow by viewModel.trendingTvShowStateFlow.collectAsState()
+    when (val state = trendingTvShow) {
+        is Resource.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is Resource.Success -> {
+            CommonListUI("Trending", "Tv Show", navigationController, state.data.results)
+        }
+
+        is Resource.Failed -> {}
+    }
 }
 
 @Composable
@@ -189,13 +246,13 @@ fun CommonListUI(
     heading: String,
     title: String,
     navigationController: NavController,
+    list: List<Result>
 ) {
-    val list = listOf("Ankit", "Bhupendra", "shefali", "Pooja", "Mayank", "Yogesh")
     Column(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(top = 18.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -220,37 +277,40 @@ fun CommonListUI(
             items(list) { item ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.width(130.dp).padding(horizontal = 5.dp)
                 ) {
                     Box {
                         Image(
-                            painter = painterResource(id = R.drawable.person),
+                            painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w185" + item.poster_path),
                             contentDescription = "banner Image",
                             contentScale = ContentScale.Crop,
                             modifier =
-                                Modifier
-                                    .width(120.dp)
-                                    .height(150.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .padding(horizontal = 5.dp),
+                            Modifier
+                                .width(130.dp)
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .padding(horizontal = 5.dp),
                         )
                         Text(
-                            text = "8.8",
+                            text = item.vote_average.toString(),
                             fontSize = 14.sp,
                             color = Color.White,
                             modifier =
-                                Modifier
-                                    .padding(top = 5.dp, end = 8.dp)
-                                    .clip(
-                                        CircleShape,
-                                    )
-                                    .background(Color.Black)
-                                    .padding(horizontal = 10.dp)
-                                    .align(alignment = Alignment.TopEnd),
+                            Modifier
+                                .padding(top = 5.dp, end = 8.dp)
+                                .clip(
+                                    CircleShape,
+                                )
+                                .background(Color.Black)
+                                .padding(horizontal = 10.dp)
+                                .align(alignment = Alignment.TopEnd),
                         )
                     }
                     Text(
-                        text = item,
-                        fontSize = 16.sp,
+                        text = item.original_title ?: item.original_name,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         color = Color.White,
                         modifier = Modifier.padding(top = 8.dp),
                     )
