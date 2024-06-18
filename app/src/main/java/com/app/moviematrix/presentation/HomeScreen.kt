@@ -66,7 +66,7 @@ fun Home(
                 .verticalScroll(rememberScrollState()),
         ) {
             SliderBanner(moviesViewModel)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             getTrendingPersonData(
                 navigationController = navigationController,
                 viewModel,
@@ -142,8 +142,8 @@ fun TrendingPersonList(
                 Image(
                     painter = rememberAsyncImagePainter(
                         "https://image.tmdb.org/t/p/w185" + item.profile_path,
-                        placeholder = painterResource(id = R.drawable.imageplaceholder),
-                        error = painterResource(id = R.drawable.imageplaceholder)
+                        placeholder = painterResource(id = R.drawable.imageplaceholder2),
+                        error = painterResource(id = R.drawable.imageplaceholder2)
                     ),
                     contentDescription = "Person Image",
                     contentScale = ContentScale.Crop,
@@ -154,7 +154,10 @@ fun TrendingPersonList(
                         .clip(CircleShape),
                 )
                 Text(
-                    text = item.name, color = Color.White, modifier = Modifier.padding(top = 8.dp),
+                    text = item.name,
+                    fontSize = 14.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(top = 8.dp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -169,7 +172,7 @@ fun Header() {
         modifier =
         Modifier
             .fillMaxWidth()
-            .padding(vertical = 15.dp),
+            .padding(vertical = 15.dp, horizontal = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -249,7 +252,7 @@ fun CommonListUI(
         modifier =
         Modifier
             .fillMaxWidth()
-            .padding(top = 18.dp),
+            .padding(top = 20.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -274,7 +277,7 @@ fun CommonListUI(
             items(list) { item ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.width(120.dp)
+                    modifier = Modifier.width(130.dp).padding(horizontal = 5.dp)
                 ) {
                     Box {
                         Image(
@@ -283,7 +286,7 @@ fun CommonListUI(
                             contentScale = ContentScale.Crop,
                             modifier =
                             Modifier
-                                .width(120.dp)
+                                .width(130.dp)
                                 .height(150.dp)
                                 .clip(RoundedCornerShape(12.dp))
                                 .padding(horizontal = 5.dp),
@@ -305,7 +308,7 @@ fun CommonListUI(
                     }
                     Text(
                         text = item.original_title ?: item.original_name,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,

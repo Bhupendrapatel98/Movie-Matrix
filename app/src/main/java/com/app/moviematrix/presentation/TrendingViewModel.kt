@@ -32,14 +32,22 @@ constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
 
     fun getTrending(apiKey: String) {
         viewModelScope.launch {
-            trendingUseCase.getTrendingPerson(apiKey).collect {
-                trendingPersonMutableStateFlow.value = it
+            launch {
+                trendingUseCase.getTrendingPerson(apiKey).collect {
+                    trendingPersonMutableStateFlow.value = it
+                }
             }
-            trendingUseCase.getTrendingMovies(apiKey).collect {
-                trendingMoviesMutableStateFlow.value = it
+
+            launch {
+                trendingUseCase.getTrendingMovies(apiKey).collect {
+                    trendingMoviesMutableStateFlow.value = it
+                }
             }
-            trendingUseCase.getTrendingTvShow(apiKey).collect {
-                trendingTvShowMutableStateFlow.value = it
+
+            launch {
+                trendingUseCase.getTrendingTvShow(apiKey).collect {
+                    trendingTvShowMutableStateFlow.value = it
+                }
             }
         }
     }

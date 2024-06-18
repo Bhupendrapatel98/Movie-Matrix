@@ -13,7 +13,7 @@ import javax.inject.Inject
 class TrendingUseCase
 @Inject
 constructor(private val repository: TrendingRepository) {
-    suspend fun getTrendingPerson(apiKey: String): Flow<Resource<TrendingResponse>> =
+    fun getTrendingPerson(apiKey: String): Flow<Resource<TrendingResponse>> =
         flow {
             emit(Resource.loading())
             emit(Resource.success(repository.getTrendingPerson(apiKey)))
@@ -23,7 +23,7 @@ constructor(private val repository: TrendingRepository) {
             emit(Resource.failed(it.message.toString()))
         }
 
-    suspend fun getTrendingMovies(apiKey: String): Flow<Resource<TrendingResponse>> =
+    fun getTrendingMovies(apiKey: String): Flow<Resource<TrendingResponse>> =
         flow {
             emit(Resource.loading())
             emit(Resource.success(repository.getTrendingMovie(apiKey)))
@@ -33,7 +33,7 @@ constructor(private val repository: TrendingRepository) {
             emit(Resource.failed(it.message.toString()))
         }
 
-    suspend fun getTrendingTvShow(apiKey: String): Flow<Resource<TrendingResponse>> =
+    fun getTrendingTvShow(apiKey: String): Flow<Resource<TrendingResponse>> =
         flow {
             emit(Resource.loading())
             emit(Resource.success(repository.getTrendingTvShow(apiKey)))
