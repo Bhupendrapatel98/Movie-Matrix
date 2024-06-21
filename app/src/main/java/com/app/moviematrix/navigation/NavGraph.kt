@@ -1,6 +1,7 @@
 package com.app.moviematrix.navigation
 
 import android.content.Context
+import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,7 +17,7 @@ fun NavGraph(
     context: Context,
 ) {
     NavHost(navController = navHostController, startDestination = SPLASH) {
-        composable(route = SPLASH) {
+        composable(route = SPLASH){
             SplashScreen(navHostController)
         }
         composable(route = DASHBOARD) {

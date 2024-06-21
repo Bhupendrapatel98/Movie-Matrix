@@ -8,8 +8,8 @@ import javax.inject.Inject
 class TrendingRepositoryImpl
 @Inject
 constructor(private val apiService: ApiService) : TrendingRepository {
-    override suspend fun getTrendingPerson(apikey: String): TrendingResponse {
-        return apiService.getTrendingPerson(apikey)
+    override suspend fun getTrendingPerson(page:Int): TrendingResponse {
+        return apiService.getTrendingPerson(page)
     }
 
     override suspend fun getTrendingMovie(apikey: String): TrendingResponse {

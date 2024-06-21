@@ -2,13 +2,18 @@ package com.app.moviematrix.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.app.moviematrix.BuildConfig
+import com.app.moviematrix.data.model.trending.Result
 import com.app.moviematrix.data.model.trending.TrendingResponse
 import com.app.moviematrix.domain.usecase.TrendingUseCase
 import com.app.moviematrix.utills.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,14 +22,18 @@ class TrendingViewModel
 @Inject
 constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
 
-    private var trendingPersonMutableStateFlow = MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
-    val trendingPersonStateFlow: StateFlow<Resource<TrendingResponse>> = trendingPersonMutableStateFlow
+    private var trendingPersonMutableStateFlow = MutableStateFlow<PagingData<Result>>(PagingData.empty())
+    val trendingPersonStateFlow: StateFlow<PagingData<Result>> = trendingPersonMutableStateFlow
 
-    private var trendingMoviesMutableStateFlow = MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
-    val trendingMoviesStateFlow: StateFlow<Resource<TrendingResponse>> = trendingMoviesMutableStateFlow
+    private var trendingMoviesMutableStateFlow =
+        MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
+    val trendingMoviesStateFlow: StateFlow<Resource<TrendingResponse>> =
+        trendingMoviesMutableStateFlow
 
-    private var trendingTvShowMutableStateFlow = MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
-    val trendingTvShowStateFlow: StateFlow<Resource<TrendingResponse>> = trendingTvShowMutableStateFlow
+    private var trendingTvShowMutableStateFlow =
+        MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
+    val trendingTvShowStateFlow: StateFlow<Resource<TrendingResponse>> =
+        trendingTvShowMutableStateFlow
 
     init {
         getTrending(BuildConfig.API_KEY)
@@ -32,8 +41,9 @@ constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
 
     fun getTrending(apiKey: String) {
         viewModelScope.launch {
+
             launch {
-                trendingUseCase.getTrendingPerson(apiKey).collect {
+                trendingUseCase.getTrendingPerson().cachedIn(viewModelScope).collect {
                     trendingPersonMutableStateFlow.value = it
                 }
             }

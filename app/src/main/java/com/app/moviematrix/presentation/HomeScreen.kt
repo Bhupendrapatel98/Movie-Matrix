@@ -1,7 +1,7 @@
 package com.app.moviematrix.presentation
 
 import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -42,13 +42,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
 import com.app.moviematrix.R
 import com.app.moviematrix.data.model.trending.Result
-import com.app.moviematrix.data.model.trending.TrendingResponse
 import com.app.moviematrix.navigation.MOVIE_LIST
 import com.app.moviematrix.navigation.PERSON_LIST
 import com.app.moviematrix.utills.Resource
+import kotlin.math.min
+
 
 @Composable
 fun Home(
@@ -85,30 +88,8 @@ fun getTrendingPersonData(
     viewModel: TrendingViewModel,
     context: Context,
 ) {
-    val trendingPersonState by viewModel.trendingPersonStateFlow.collectAsState()
+    val trendingPersonData = viewModel.trendingPersonStateFlow.collectAsLazyPagingItems()
 
-    when (val state = trendingPersonState) {
-        is Resource.Loading -> {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is Resource.Success -> {
-            TrendingPersonList(navigationController, state.data.results)
-        }
-
-        is Resource.Failed -> {
-            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-        }
-    }
-}
-
-@Composable
-fun TrendingPersonList(
-    navigationController: NavController,
-    list: List<Result>,
-) {
     Row(
         modifier = Modifier.padding(bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -131,39 +112,67 @@ fun TrendingPersonList(
             },
         )
     }
-    LazyRow {
-        items(list) { item ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(horizontal = 5.dp)
-                    .width(90.dp),
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        "https://image.tmdb.org/t/p/w185" + item.profile_path,
-                        placeholder = painterResource(id = R.drawable.imageplaceholder2),
-                        error = painterResource(id = R.drawable.imageplaceholder2)
-                    ),
-                    contentDescription = "Person Image",
-                    contentScale = ContentScale.Crop,
-                    modifier =
-                    Modifier
-                        .width(90.dp)
-                        .height(90.dp)
-                        .clip(CircleShape),
-                )
-                Text(
-                    text = item.name,
-                    fontSize = 14.sp,
-                    color = Color.White,
-                    modifier = Modifier.padding(top = 8.dp),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+
+    trendingPersonData.apply {
+        when {
+            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
+                Text(text = "Error")
+            }
+
+            loadState.refresh is LoadState.NotLoading -> {
+                LazyRow {
+                    items(min(trendingPersonData.itemCount, 5)) { index ->
+                        val repository = trendingPersonData[index]
+                        if (repository != null) {
+                            TrendingPersonList(navigationController, repository)
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+@Composable
+fun TrendingPersonList(
+    navigationController: NavController,
+    list: Result,
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .width(90.dp),
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(
+                "https://image.tmdb.org/t/p/w185" + list.profile_path,
+                placeholder = painterResource(id = R.drawable.imageplaceholder2),
+                error = painterResource(id = R.drawable.imageplaceholder2)
+            ),
+            contentDescription = "Person Image",
+            contentScale = ContentScale.Crop,
+            modifier =
+            Modifier
+                .width(90.dp)
+                .height(90.dp)
+                .clip(CircleShape),
+        )
+        Text(
+            text = list.name.toString(),
+            fontSize = 14.sp,
+            color = Color.White,
+            modifier = Modifier.padding(top = 8.dp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+
 }
 
 @Composable
@@ -277,7 +286,9 @@ fun CommonListUI(
             items(list) { item ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.width(130.dp).padding(horizontal = 5.dp)
+                    modifier = Modifier
+                        .width(130.dp)
+                        .padding(horizontal = 5.dp)
                 ) {
                     Box {
                         Image(
@@ -307,7 +318,7 @@ fun CommonListUI(
                         )
                     }
                     Text(
-                        text = item.original_title ?: item.original_name,
+                        text = (item.original_title ?: item.original_name).toString(),
                         fontSize = 14.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,

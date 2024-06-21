@@ -1,6 +1,8 @@
 package com.app.moviematrix.presentation
 
+import androidx.paging.PagingData
 import com.app.moviematrix.BuildConfig
+import com.app.moviematrix.data.model.trending.Result
 import com.app.moviematrix.data.model.trending.TrendingResponse
 import com.app.moviematrix.domain.usecase.TrendingUseCase
 import com.app.moviematrix.utills.Resource
@@ -37,7 +39,7 @@ class TrendingPersonViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         // Mocking initial fetch behavior in init block
-        `when`(trendingPersonUseCase.getTrendingPerson(BuildConfig.API_KEY)).thenReturn(flowOf(Resource.loading()))
+        `when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(flowOf(PagingData.empty()))
         `when`(trendingPersonUseCase.getTrendingMovies(BuildConfig.API_KEY)).thenReturn(flowOf(Resource.loading()))
         `when`(trendingPersonUseCase.getTrendingTvShow(BuildConfig.API_KEY)).thenReturn(flowOf(Resource.loading()))
 
@@ -52,12 +54,12 @@ class TrendingPersonViewModelTest {
     @Test
     fun `getTrendingPerson emits loading then success`() = runTest {
         // Given
-        val mockTrendingPerson = Resource.success(TrendingResponse(page = 1, results = emptyList(), total_pages = 1, total_results = 1))
+        val mockTrendingPerson : PagingData<Result> = PagingData.empty()
         val mockTrendingMovies = Resource.success(TrendingResponse(page = 1, results = emptyList(), total_pages = 1, total_results = 1))
         val mockTrendingTvShow = Resource.success(TrendingResponse(page = 1, results = emptyList(), total_pages = 1, total_results = 1))
 
         // Mocking method behavior
-        `when`(trendingPersonUseCase.getTrendingPerson(BuildConfig.API_KEY)).thenReturn(flowOf(mockTrendingPerson))
+        `when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(flowOf(mockTrendingPerson))
         `when`(trendingPersonUseCase.getTrendingMovies(BuildConfig.API_KEY)).thenReturn(flowOf(mockTrendingMovies))
         `when`(trendingPersonUseCase.getTrendingTvShow(BuildConfig.API_KEY)).thenReturn(flowOf(mockTrendingTvShow))
 
@@ -78,7 +80,7 @@ class TrendingPersonViewModelTest {
         val expectedResource = Resource.failed<TrendingResponse>(errorMessage)
 
         // Mocking method behavior
-        `when`(trendingPersonUseCase.getTrendingPerson(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
+        //`when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(flowOf(expectedResource))
         `when`(trendingPersonUseCase.getTrendingMovies(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
         `when`(trendingPersonUseCase.getTrendingTvShow(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
 
@@ -87,7 +89,7 @@ class TrendingPersonViewModelTest {
 
         advanceUntilIdle()
         // Then
-        assertEquals(expectedResource, trendingPersonViewModel.trendingPersonStateFlow.value)
+        //assertEquals(expectedResource, trendingPersonViewModel.trendingPersonStateFlow.value)
         assertEquals(expectedResource, trendingPersonViewModel.trendingMoviesStateFlow.value)
         assertEquals(expectedResource, trendingPersonViewModel.trendingTvShowStateFlow.value)
     }

@@ -15,8 +15,8 @@ android {
         applicationId = "com.app.moviematrix"
         minSdk = 24
         targetSdk = 34
-        versionCode = 6
-        versionName = "6.0"
+        versionCode = 7
+        versionName = "7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -126,6 +126,8 @@ dependencies {
 
     // paging3
     implementation(libs.paging.compose)
+    implementation (libs.androidx.lifecycle.runtime.compose)
+    implementation (libs.androidx.paging.runtime.ktx)
 
     // gson
     implementation(libs.gson)
