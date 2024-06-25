@@ -32,10 +32,10 @@ constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
     val trendingTvShowStateFlow: StateFlow<PagingData<Result>> = trendingTvShowMutableStateFlow
 
     init {
-        getTrending(BuildConfig.API_KEY)
+        getTrending()
     }
 
-    fun getTrending(apiKey: String) {
+    fun getTrending() {
         viewModelScope.launch {
 
             launch {

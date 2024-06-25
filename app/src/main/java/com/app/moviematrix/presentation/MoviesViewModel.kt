@@ -3,6 +3,7 @@ package com.app.moviematrix.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.app.moviematrix.BuildConfig
 import com.app.moviematrix.data.model.trending.Result
 import com.app.moviematrix.data.model.trending.TrendingResponse
@@ -34,7 +35,7 @@ class MoviesViewModel @Inject constructor(private val movieUseCase: MovieUseCase
             movieUseCase.getUpComingMovie(apiKey).collect {
                 upcomingMovieMutableStateFlow.value = it
             }
-            movieUseCase.getPopularMovie(apiKey).collect {
+            movieUseCase.getPopularMovie(apiKey).cachedIn(viewModelScope).collect {
                 popularMovieMutableStateFlow.value = it
             }
         }

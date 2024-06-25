@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.app.moviematrix.presentation.ui.screens.bottomNavigation.MainScreen
-import com.app.moviematrix.presentation.MovieList
+import com.app.moviematrix.presentation.ui.screens.movies.MovieList
 import com.app.moviematrix.presentation.ui.screens.person.PersonList
 import com.app.moviematrix.presentation.SplashScreen
 
@@ -31,8 +31,8 @@ fun NavGraph(
             arguments = listOf(navArgument("movieType") { type = NavType.StringType })
         ) {
             val movieType = it.arguments?.getString("movieType")
-            Log.d("MovieType", "NavGraph: $movieType")
-            MovieList(context = context)
+            Log.d("MovieTypeeee", "NavGraph: $movieType")
+            MovieList(context = context, type = movieType)
         }
         composable(route = PERSON_LIST) {
             PersonList(context = context)

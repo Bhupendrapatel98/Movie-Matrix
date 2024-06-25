@@ -16,4 +16,6 @@ data class Result(
     val overview: String?=null,
     val poster_path: String?=null,
     val vote_average: Float?=null,
+    val release_date: String?=null,
+    val first_air_date: String?=null,
 )

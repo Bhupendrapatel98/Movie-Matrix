@@ -63,7 +63,7 @@ fun CommonListUI(
                 text = AnnotatedString("More"),
                 style = TextStyle(color = Color.Red, fontSize = 16.sp),
                 onClick = {
-                    navigationController.navigate("$MOVIE_LIST/trending")
+                    navigationController.navigate("$MOVIE_LIST/$heading$title")
                 },
             )
         }
