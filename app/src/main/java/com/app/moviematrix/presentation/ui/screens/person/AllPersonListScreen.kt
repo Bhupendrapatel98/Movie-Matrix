@@ -47,8 +47,7 @@ fun PersonList(context: Context, viewModel: TrendingViewModel = hiltViewModel())
             color = Color.White,
             modifier =
             Modifier
-                .padding(vertical = 10.dp)
-                .background(Color(ContextCompat.getColor(context, R.color.bottomnav))),
+                .padding(vertical = 10.dp, horizontal = 15.dp)
         )
 
         LazyColumn {
