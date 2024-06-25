@@ -25,15 +25,11 @@ constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
     private var trendingPersonMutableStateFlow = MutableStateFlow<PagingData<Result>>(PagingData.empty())
     val trendingPersonStateFlow: StateFlow<PagingData<Result>> = trendingPersonMutableStateFlow
 
-    private var trendingMoviesMutableStateFlow =
-        MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
-    val trendingMoviesStateFlow: StateFlow<Resource<TrendingResponse>> =
-        trendingMoviesMutableStateFlow
+    private var trendingMoviesMutableStateFlow = MutableStateFlow<PagingData<Result>>(PagingData.empty())
+    val trendingMoviesStateFlow: StateFlow<PagingData<Result>> = trendingMoviesMutableStateFlow
 
-    private var trendingTvShowMutableStateFlow =
-        MutableStateFlow<Resource<TrendingResponse>>(Resource.loading())
-    val trendingTvShowStateFlow: StateFlow<Resource<TrendingResponse>> =
-        trendingTvShowMutableStateFlow
+    private var trendingTvShowMutableStateFlow = MutableStateFlow<PagingData<Result>>(PagingData.empty())
+    val trendingTvShowStateFlow: StateFlow<PagingData<Result>> = trendingTvShowMutableStateFlow
 
     init {
         getTrending(BuildConfig.API_KEY)
@@ -49,13 +45,13 @@ constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
             }
 
             launch {
-                trendingUseCase.getTrendingMovies(apiKey).collect {
+                trendingUseCase.getTrendingMovies().cachedIn(viewModelScope).collect {
                     trendingMoviesMutableStateFlow.value = it
                 }
             }
 
             launch {
-                trendingUseCase.getTrendingTvShow(apiKey).collect {
+                trendingUseCase.getTrendingTvShow().cachedIn(viewModelScope).collect {
                     trendingTvShowMutableStateFlow.value = it
                 }
             }

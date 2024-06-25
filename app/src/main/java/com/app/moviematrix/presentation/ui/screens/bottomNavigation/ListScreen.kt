@@ -1,4 +1,4 @@
-package com.app.moviematrix.presentation
+package com.app.moviematrix.presentation.ui.screens.bottomNavigation
 
 import android.content.Context
 import androidx.compose.foundation.background

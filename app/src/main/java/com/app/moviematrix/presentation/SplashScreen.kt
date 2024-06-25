@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.app.moviematrix.navigation.DASHBOARD
 import com.app.moviematrix.navigation.SPLASH
-import com.app.moviematrix.ui.theme.Background
+import com.app.moviematrix.presentation.ui.theme.Background
 import kotlinx.coroutines.delay
 
 @Composable

@@ -11,7 +11,7 @@ class MovieRepositoryImpl @Inject constructor(private val apiService: ApiService
         return apiService.getUpcomingMovie(apiKey)
     }
 
-    override suspend fun getPopularMovies(apiKey: String): TrendingResponse {
-        return apiService.getPopularMovie(apiKey)
+    override suspend fun getPopularMovies(page:Int): TrendingResponse {
+        return apiService.getPopularMovie(page)
     }
 }
