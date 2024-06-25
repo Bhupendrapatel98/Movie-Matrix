@@ -1,4 +1,4 @@
-package com.app.moviematrix.ui.theme
+package com.app.moviematrix.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

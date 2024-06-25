@@ -1,4 +1,4 @@
-package com.app.moviematrix.presentation
+package com.app.moviematrix.presentation.ui.screens.bottomNavigation
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -31,7 +31,8 @@ import com.app.moviematrix.navigation.HOME
 import com.app.moviematrix.navigation.LIST
 import com.app.moviematrix.navigation.MENU
 import com.app.moviematrix.navigation.SEARCH
-import com.app.moviematrix.ui.theme.Background
+import com.app.moviematrix.presentation.ui.screens.home.Home
+import com.app.moviematrix.presentation.ui.theme.Background
 
 @Composable
 fun MainScreen(

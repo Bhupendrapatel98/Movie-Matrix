@@ -1,16 +1,13 @@
-package com.app.moviematrix.data.remote.repository
+package com.app.moviematrix.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import coil.network.HttpException
 import com.app.moviematrix.data.model.trending.Result
 import com.app.moviematrix.domain.repository.TrendingRepository
-import java.io.IOException
 import javax.inject.Inject
 
-class TrendingPersonPagingSource @Inject constructor(private val repository: TrendingRepository) :
+class TrendingTvShowPagingSource @Inject constructor(private val repository: TrendingRepository) :
     PagingSource<Int, Result>() {
-
     override fun getRefreshKey(state: PagingState<Int, Result>): Int? {
         return state.anchorPosition
     }
@@ -18,7 +15,7 @@ class TrendingPersonPagingSource @Inject constructor(private val repository: Tre
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Result> {
         return try {
             val page = params.key ?: 1
-            val response = repository.getTrendingPerson(page)
+            val response = repository.getTrendingTvShow(page)
 
             if (response.results.isNotEmpty()) {
                 LoadResult.Page(
