@@ -140,4 +140,6 @@ dependencies {
 
     implementation(libs.firebase.bom)
     implementation(libs.firebase.analytics)
+
+    implementation (libs.lottie.compose)
 }
