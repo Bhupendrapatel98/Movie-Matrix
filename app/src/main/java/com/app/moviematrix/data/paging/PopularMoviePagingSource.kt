@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.app.moviematrix.data.model.trending.Result
 import com.app.moviematrix.domain.repository.MovieRepository
-import com.app.moviematrix.domain.repository.TrendingRepository
 import javax.inject.Inject
 
 class PopularMoviePagingSource @Inject constructor(private val repository: MovieRepository) :

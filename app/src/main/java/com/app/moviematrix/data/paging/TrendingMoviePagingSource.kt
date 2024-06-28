@@ -1,6 +1,5 @@
 package com.app.moviematrix.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.app.moviematrix.data.model.trending.Result
