@@ -17,17 +17,19 @@ import java.util.concurrent.TimeUnit
 class TrendingPersonPagingSource(
     private val repository: TrendingRepository,
     private val moviesDatabase: MoviesDatabase
-) :
-    RemoteMediator<Int, Result>() {
+) : RemoteMediator<Int, Result>() {
 
     override suspend fun initialize(): InitializeAction {
         val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
-        return if (System.currentTimeMillis() - (moviesDatabase.getRemoteKeysDao().getCreationTime() ?: 0) < cacheTimeout) {
+        return if (System.currentTimeMillis() - (moviesDatabase.getRemoteKeysDao().getCreationTime()
+                ?: 0) < cacheTimeout
+        ) {
             InitializeAction.SKIP_INITIAL_REFRESH
         } else {
             InitializeAction.LAUNCH_INITIAL_REFRESH
         }
     }
+
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Result>): MediatorResult {
         val page: Int = when (loadType) {
             LoadType.REFRESH -> {
@@ -50,37 +52,40 @@ class TrendingPersonPagingSource(
             }
         }
 
-            try {
-                val apiResponse = repository.getTrendingPerson(page = page)
-                val movies = apiResponse.results
-                val endOfPaginationReached = movies.isEmpty()
+        try {
+            val apiResponse = repository.getTrendingPerson(page = page)
+            val movies = apiResponse.results
+            val endOfPaginationReached = movies.isEmpty()
 
-                moviesDatabase.withTransaction {
-                    if (loadType == LoadType.REFRESH) {
-                        moviesDatabase.getRemoteKeysDao().clearRemoteKeys()
-                        moviesDatabase.getMoviesDao().clearAllMovies()
-                    }
-                    val prevKey = if (page > 1) page - 1 else null
-                    val nextKey = if (endOfPaginationReached) null else page + 1
-                    val remoteKeys = movies.map {
-                        RemoteKeys(
-                            movieID = it.id,
-                            prevKey = prevKey,
-                            currentPage = page,
-                            nextKey = nextKey
-                        )
-                    }
-                    moviesDatabase.getRemoteKeysDao().insertAll(remoteKeys)
-                    moviesDatabase.getMoviesDao()
-                        .insertAll(movies.onEachIndexed { _, movie -> movie.page = page })
+            moviesDatabase.withTransaction {
+                if (loadType == LoadType.REFRESH) {
+                    moviesDatabase.getRemoteKeysDao().clearRemoteKeys()
+                    moviesDatabase.getMoviesDao().clearAllMovies()
                 }
-                return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-            } catch (error: IOException) {
-                return MediatorResult.Error(error)
-            } catch (error: HttpException) {
-                return MediatorResult.Error(error)
+                val prevKey = if (page > 1) page - 1 else null
+                val nextKey = if (endOfPaginationReached) null else page + 1
+                val remoteKeys = movies.map {
+                    RemoteKeys(
+                        movieID = it.id,
+                        prevKey = prevKey,
+                        currentPage = page,
+                        nextKey = nextKey
+                    )
+                }
+                moviesDatabase.getRemoteKeysDao().insertAll(remoteKeys)
+                moviesDatabase.getMoviesDao()
+                    .insertAll(movies.onEachIndexed { _, movie ->
+                        movie.page = page
+                        movie.type ="person"
+                    })
             }
+            return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+        } catch (error: IOException) {
+            return MediatorResult.Error(error)
+        } catch (error: HttpException) {
+            return MediatorResult.Error(error)
         }
+    }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, Result>): RemoteKeys? {
         return state.anchorPosition?.let { position ->

@@ -33,7 +33,8 @@ constructor(
                 initialLoadSize = 20
             ),
             pagingSourceFactory = {
-                moviesDatabase.getMoviesDao().getMovies()
+                //moviesDatabase.getMoviesDao().getMovies()
+                moviesDatabase.getMoviesDao().getMoviesByType("person")
             },
             remoteMediator = TrendingPersonPagingSource(
                 repository = repository,

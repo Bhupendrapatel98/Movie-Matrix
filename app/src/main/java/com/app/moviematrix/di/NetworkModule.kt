@@ -2,6 +2,9 @@ package com.app.moviematrix.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.app.moviematrix.data.local.MIGRATION_1_2
 import com.app.moviematrix.data.local.dao.MoviesDao
 import com.app.moviematrix.data.local.database.MoviesDatabase
 import com.app.moviematrix.data.local.dao.RemoteKeysDao
@@ -36,6 +39,7 @@ class NetworkModule {
     @Provides
     fun provideMovieDataBse(@ApplicationContext context: Context): MoviesDatabase {
         return Room.databaseBuilder(context, MoviesDatabase::class.java, "movies_database")
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 

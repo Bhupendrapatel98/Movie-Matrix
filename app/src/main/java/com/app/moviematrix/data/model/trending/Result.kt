@@ -24,4 +24,5 @@ data class Result(
     val release_date: String?,
     val first_air_date: String?,
     var page: Int,
+    var type:String
 )

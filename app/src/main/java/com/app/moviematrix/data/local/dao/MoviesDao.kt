@@ -13,8 +13,12 @@ interface MoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(movie: List<Result>)
 
+
     @Query("Select * From movies order By page")
     fun getMovies(): PagingSource<Int, Result>
+
+    @Query("Select * From movies Where type = :type order By page")
+    fun getMoviesByType(type:String): PagingSource<Int, Result>
 
     @Query("Delete from movies")
     suspend fun clearAllMovies()

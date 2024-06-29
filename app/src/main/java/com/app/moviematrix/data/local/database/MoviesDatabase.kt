@@ -10,7 +10,7 @@ import com.app.moviematrix.data.model.trending.Result
 
 @Database(
     entities = [Result::class, RemoteKeys::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(Converters::class)
 abstract class MoviesDatabase : RoomDatabase() {
