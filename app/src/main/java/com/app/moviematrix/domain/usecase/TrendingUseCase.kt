@@ -16,9 +16,7 @@ import javax.inject.Inject
 class TrendingUseCase
 @Inject
 constructor(
-    private val repository: TrendingRepository,
-    private val trendingTvShowPagingSource: TrendingTvShowPagingSource,
-    private val moviesDatabase: MoviesDatabase
+    private val repository: TrendingRepository, private val moviesDatabase: MoviesDatabase
 ) {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -62,11 +60,23 @@ constructor(
         ).flow
     }
 
+    @OptIn(ExperimentalPagingApi::class)
     fun getTrendingTvShow(): Flow<PagingData<Result>> {
         return Pager(
-            config = PagingConfig(20, enablePlaceholders = true)
-        ) {
-            trendingTvShowPagingSource
-        }.flow
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = true,
+                prefetchDistance = 10,
+                initialLoadSize = 20
+            ),
+            pagingSourceFactory = {
+                //moviesDatabase.getMoviesDao().getMovies()
+                moviesDatabase.getMoviesDao().getMoviesByType("tvshow")
+            },
+            remoteMediator = TrendingTvShowPagingSource(
+                repository = repository,
+                moviesDatabase = moviesDatabase
+            )
+        ).flow
     }
 }

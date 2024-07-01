@@ -1,5 +1,6 @@
 package com.app.moviematrix.data.paging
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -82,6 +83,7 @@ class TrendingPersonPagingSource(
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (error: IOException) {
+            Log.d("jdsh74874345", "load: "+error.message)
             return MediatorResult.Error(error)
         } catch (error: HttpException) {
             return MediatorResult.Error(error)
