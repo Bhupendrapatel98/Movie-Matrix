@@ -60,7 +60,8 @@ class TrendingPersonPagingSource(
             moviesDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     moviesDatabase.getRemoteKeysDao().clearRemoteKeys()
-                    moviesDatabase.getMoviesDao().clearAllMovies()
+                    //moviesDatabase.getMoviesDao().clearAllMovies()
+                    moviesDatabase.getMoviesDao().clearMoviesByType("person")
                 }
                 val prevKey = if (page > 1) page - 1 else null
                 val nextKey = if (endOfPaginationReached) null else page + 1

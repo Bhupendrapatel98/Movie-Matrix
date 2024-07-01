@@ -9,7 +9,7 @@ data class Result(
     val id: Int,
     val adult: Boolean?=false,
     val gender: Int?,
-    val known_for: List<KnownFor>,
+    val known_for: List<KnownFor>?,
     val known_for_department: String?,
     val media_type: String?,
     val name: String?,

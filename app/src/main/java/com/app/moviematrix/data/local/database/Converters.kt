@@ -11,13 +11,15 @@ class Converters {
     private val gson = Gson()
 
     @TypeConverter
-    fun fromKnownForList(knownFor: List<KnownFor>): String? {
-        val type = object : TypeToken<List<KnownFor>>() {}.type
-        return gson.toJson(knownFor, type)
+    fun fromKnownForList(knownFor: List<KnownFor>?): String? {
+        return gson.toJson(knownFor)
     }
 
     @TypeConverter
-    fun toKnownForList(knownForString: String): List<KnownFor> {
+    fun toKnownForList(knownForString: String?): List<KnownFor>? {
+        if (knownForString.isNullOrEmpty()) {
+            return emptyList()
+        }
         val type = object : TypeToken<List<KnownFor>>() {}.type
         return gson.fromJson(knownForString, type)
     }

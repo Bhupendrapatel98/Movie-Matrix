@@ -22,4 +22,7 @@ interface MoviesDao {
 
     @Query("Delete from movies")
     suspend fun clearAllMovies()
+
+    @Query("Delete from movies Where type = :type")
+    suspend fun clearMoviesByType(type:String)
 }
