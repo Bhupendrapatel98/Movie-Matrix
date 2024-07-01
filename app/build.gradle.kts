@@ -15,8 +15,8 @@ android {
         applicationId = "com.app.moviematrix"
         minSdk = 24
         targetSdk = 34
-        versionCode = 8
-        versionName = "8.0"
+        versionCode = 10
+        versionName = "10.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -140,4 +140,6 @@ dependencies {
 
     implementation(libs.firebase.bom)
     implementation(libs.firebase.analytics)
+
+    implementation (libs.lottie.compose)
 }

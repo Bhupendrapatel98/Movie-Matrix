@@ -71,7 +71,7 @@ fun Header() {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Movie Stack",
+            text = "Movie Matrix",
             color = Color.White,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,

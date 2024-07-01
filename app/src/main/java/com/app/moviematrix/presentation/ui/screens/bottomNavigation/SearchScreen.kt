@@ -1,7 +1,9 @@
 package com.app.moviematrix.presentation.ui.screens.bottomNavigation
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,19 +30,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.app.moviematrix.R
+import com.app.moviematrix.navigation.MOVIE_LIST
+import com.app.moviematrix.navigation.PERSON_LIST
 
-@Preview
 @Composable
-fun SearchPage() {
+fun SearchPage(navController: NavController) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(horizontal = 15.dp),
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(horizontal = 15.dp),
     ) {
         Column {
             Text(
@@ -63,9 +67,9 @@ fun SearchPage() {
                         Icons.Default.Search,
                         contentDescription = "searchImage",
                         colorFilter =
-                            ColorFilter.tint(
-                                Color.Gray,
-                            ),
+                        ColorFilter.tint(
+                            Color.Gray,
+                        ),
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
@@ -91,32 +95,35 @@ fun SearchPage() {
                         Modifier
                             .weight(1f)
                             .height(120.dp)
-                            .clip(RoundedCornerShape(15.dp)),
+                            .clip(RoundedCornerShape(15.dp))
+                            .clickable {
+                                navController.navigate("$MOVIE_LIST/TrendingMovies")
+                            },
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.person),
+                            painter = painterResource(id = R.drawable.movie),
                             contentDescription = "person",
                             contentScale = ContentScale.Crop,
                             modifier =
-                                Modifier
-                                    .fillMaxHeight(),
+                            Modifier
+                                .fillMaxHeight(),
                         )
                         Box(
                             modifier =
-                                Modifier
-                                    .fillMaxHeight()
-                                    .fillMaxWidth()
-                                    .background(Color.Black.copy(alpha = 0.4f)),
+                            Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth()
+                                .background(Color.Black.copy(alpha = 0.4f)),
                         )
                         Text(
                             text = "Movies",
-                            fontSize = 18.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White,
                             modifier =
-                                Modifier
-                                    .padding(top = 25.dp)
-                                    .align(alignment = Alignment.BottomCenter),
+                            Modifier
+                                .padding(top = 25.dp)
+                                .align(alignment = Alignment.BottomCenter),
                         )
                     }
 
@@ -126,34 +133,37 @@ fun SearchPage() {
                         Modifier
                             .weight(1f)
                             .height(120.dp)
-                            .clip(RoundedCornerShape(15.dp)),
+                            .clip(RoundedCornerShape(15.dp))
+                            .clickable {
+                                navController.navigate("$MOVIE_LIST/TrendingTv Show")
+                            },
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.person),
+                            painter = painterResource(id = R.drawable.tvimage),
                             contentDescription = "person",
                             contentScale = ContentScale.Crop,
                             modifier =
-                                Modifier
-                                    .fillMaxHeight(),
+                            Modifier
+                                .fillMaxHeight(),
                         )
 
                         Box(
                             modifier =
-                                Modifier
-                                    .fillMaxHeight()
-                                    .fillMaxWidth()
-                                    .background(Color.Black.copy(alpha = 0.4f)),
+                            Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth()
+                                .background(Color.Black.copy(alpha = 0.4f)),
                         )
 
                         Text(
                             text = "Tv Shows",
-                            fontSize = 18.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White,
                             modifier =
-                                Modifier
-                                    .padding(top = 25.dp)
-                                    .align(alignment = Alignment.BottomCenter),
+                            Modifier
+                                .padding(top = 25.dp)
+                                .align(alignment = Alignment.BottomCenter),
                         )
                     }
                 }
@@ -164,31 +174,34 @@ fun SearchPage() {
                     .padding(top = 15.dp)
                     .fillMaxWidth()
                     .height(160.dp)
-                    .clip(RoundedCornerShape(15.dp)),
+                    .clip(RoundedCornerShape(15.dp))
+                    .clickable {
+                        navController.navigate(PERSON_LIST)
+                    },
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.person),
+                    painter = painterResource(id = R.drawable.people),
                     contentDescription = "person",
                     contentScale = ContentScale.Crop,
                 )
 
                 Box(
                     modifier =
-                        Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth()
-                            .background(Color.Black.copy(alpha = 0.4f)),
+                    Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.4f)),
                 )
 
                 Text(
                     text = "Persons",
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
                     modifier =
-                        Modifier
-                            .padding(top = 25.dp)
-                            .align(alignment = Alignment.BottomCenter),
+                    Modifier
+                        .padding(top = 25.dp)
+                        .align(alignment = Alignment.BottomCenter),
                 )
             }
         }

@@ -1,21 +1,28 @@
 package com.app.moviematrix.data.model.trending
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "movies")
 data class Result(
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     val adult: Boolean?=false,
-    val gender: Int?=null,
-    val id: Int?=null,
-    val known_for: List<KnownFor>?=null,
-    val known_for_department: String?=null,
-    val media_type: String?=null,
-    val name: String?=null,
-    val original_name: String?=null,
-    val popularity: Double?=null,
-    val profile_path: String?=null,
-    val backdrop_path: String?=null,
-    val original_title: String?=null,
-    val overview: String?=null,
-    val poster_path: String?=null,
-    val vote_average: Float?=null,
-    val release_date: String?=null,
-    val first_air_date: String?=null,
+    val gender: Int?,
+    val known_for: List<KnownFor>?,
+    val known_for_department: String?,
+    val media_type: String?,
+    val name: String?,
+    val original_name: String?,
+    val popularity: Double?,
+    val profile_path: String?,
+    val backdrop_path: String?,
+    val original_title: String?,
+    val overview: String?,
+    val poster_path: String?,
+    val vote_average: Float?,
+    val release_date: String?,
+    val first_air_date: String?,
+    var page: Int,
+    var type:String
 )

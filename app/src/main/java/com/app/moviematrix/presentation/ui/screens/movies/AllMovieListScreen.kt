@@ -72,7 +72,7 @@ fun MovieList(
             )
     ) {
         Text(
-            text = "Movie Stack",
+            text = "Movie Matrix",
             fontSize = 20.sp,
             color = Color.White,
             modifier =

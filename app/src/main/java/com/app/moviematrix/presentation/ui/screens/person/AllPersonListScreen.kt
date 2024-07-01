@@ -42,7 +42,7 @@ fun PersonList(context: Context, viewModel: TrendingViewModel = hiltViewModel())
             ),
     ) {
         Text(
-            text = "Movie Stack",
+            text = "Movie Matrix",
             fontSize = 20.sp,
             color = Color.White,
             modifier =
