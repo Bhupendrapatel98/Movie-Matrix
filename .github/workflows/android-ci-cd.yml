@@ -229,3 +229,4 @@ jobs:
           releaseFiles: app/build/outputs/bundle/release/app-release-signed.aab
           track: internal
           inAppUpdatePriority: 5
+          changesNotSentForReview: true
