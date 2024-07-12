@@ -1,5 +1,6 @@
 package com.app.moviematrix.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -10,6 +11,10 @@ import com.app.moviematrix.data.model.trending.TrendingResponse
 import com.app.moviematrix.domain.usecase.TrendingUseCase
 import com.app.moviematrix.utills.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TrendingViewModel
 @Inject
-constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
+constructor(private val trendingUseCase: TrendingUseCase,
+           @ViewModelScoped private val viewModelScope: CoroutineScope
+) : ViewModel() {
 
     private var trendingPersonMutableStateFlow = MutableStateFlow<PagingData<Result>>(PagingData.empty())
     val trendingPersonStateFlow: StateFlow<PagingData<Result>> = trendingPersonMutableStateFlow
@@ -57,4 +64,5 @@ constructor(private val trendingUseCase: TrendingUseCase) : ViewModel() {
             }
         }
     }
+
 }

@@ -1,18 +1,14 @@
 package com.app.moviematrix.presentation
 
 import androidx.paging.PagingData
-import com.app.moviematrix.BuildConfig
+import app.cash.turbine.test
 import com.app.moviematrix.data.model.trending.Result
-import com.app.moviematrix.data.model.trending.TrendingResponse
 import com.app.moviematrix.domain.usecase.TrendingUseCase
-import com.app.moviematrix.utills.Resource
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -23,86 +19,73 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.atLeastOnce
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
+import kotlin.time.ExperimentalTime
 
-//@RunWith(MockitoJUnitRunner::class)
-//@OptIn(ExperimentalCoroutinesApi::class)
+
+@RunWith(MockitoJUnitRunner::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class TrendingPersonViewModelTest {
-    /* @Mock
-     private lateinit var trendingPersonUseCase: TrendingUseCase
 
-     private lateinit var trendingPersonViewModel: TrendingViewModel
-     //private val testDispatcher = UnconfinedTestDispatcher()
-     private val testDispatcher = StandardTestDispatcher()
+    @Mock
+    private lateinit var trendingPersonUseCase: TrendingUseCase
 
-     @Before
-     fun setUp() {
-         MockitoAnnotations.openMocks(this)
-         Dispatchers.setMain(testDispatcher)
+    private lateinit var trendingPersonViewModel: TrendingViewModel
 
-         // Mocking initial fetch behavior in init block
-         `when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(flowOf(PagingData.empty()))
-         `when`(trendingPersonUseCase.getTrendingMovies(BuildConfig.API_KEY)).thenReturn(flowOf(Resource.loading()))
-         `when`(trendingPersonUseCase.getTrendingTvShow(BuildConfig.API_KEY)).thenReturn(flowOf(Resource.loading()))
+    private val testDispatcher = UnconfinedTestDispatcher()
 
-         trendingPersonViewModel = TrendingViewModel(trendingPersonUseCase)
-     }
+    @Before
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        Dispatchers.setMain(testDispatcher)
 
-     @After
-     fun tearDown() {
-         Dispatchers.resetMain()
-     }
+        `when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(flowOf(PagingData.empty()))
+        `when`(trendingPersonUseCase.getTrendingMovies()).thenReturn(flowOf(PagingData.empty()))
+        `when`(trendingPersonUseCase.getTrendingTvShow()).thenReturn(flowOf(PagingData.empty()))
 
-     @Test
-     fun `getTrendingPerson emits loading then success`() = runTest {
-         // Given
-         val mockTrendingPersonResult = Result()
-         val singleItemFlow = listOf(mockTrendingPersonResult)
-         val mockTrendingPerson : PagingData<Result> = PagingData.from(singleItemFlow)
-         val trendingPersonData = flowOf(mockTrendingPerson)
+        val testScope = TestScope(testDispatcher)
+        trendingPersonViewModel = TrendingViewModel(trendingPersonUseCase, testScope)
+    }
 
-         val mockTrendingMovies = Resource.success(TrendingResponse(page = 1, results = emptyList(), total_pages = 1, total_results = 1))
-         val mockTrendingTvShow = Resource.success(TrendingResponse(page = 1, results = emptyList(), total_pages = 1, total_results = 1))
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
-         // Mocking method behavior
-         `when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(trendingPersonData)
-         `when`(trendingPersonUseCase.getTrendingMovies(BuildConfig.API_KEY)).thenReturn(flowOf(mockTrendingMovies))
-         `when`(trendingPersonUseCase.getTrendingTvShow(BuildConfig.API_KEY)).thenReturn(flowOf(mockTrendingTvShow))
+    @OptIn(ExperimentalTime::class)
+    @Test
+    fun `test getTrending calls all use case methods`() = runTest {
 
-         // When
-         trendingPersonViewModel.getTrending(BuildConfig.API_KEY)
+        val personFlow = flowOf(mockResult)
 
+        // Mock the return values for each method
+        `when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(personFlow)
+        `when`(trendingPersonUseCase.getTrendingMovies()).thenReturn(personFlow)
+        `when`(trendingPersonUseCase.getTrendingTvShow()).thenReturn(personFlow)
 
-         advanceUntilIdle()
-         val actualTrendingPersonData = trendingPersonViewModel.trendingPersonStateFlow.collect()
-         val expectedResponse= trendingPersonData.collect()
+        // When
+        trendingPersonViewModel.getTrending()
 
-         // Then
-         assertEquals(expectedResponse, actualTrendingPersonData)
-         assertEquals(mockTrendingMovies, trendingPersonViewModel.trendingMoviesStateFlow.value)
-         assertEquals(mockTrendingTvShow, trendingPersonViewModel.trendingTvShowStateFlow.value)
-     }
+        // Advance the test dispatcher to ensure all coroutines complete
+        advanceUntilIdle()
 
-     @Test
-     fun `getTrendingPerson emits loading then failure`() = runTest {
-         // Given
-         val errorMessage = "Failed to load data"
-         val expectedResource = Resource.failed<TrendingResponse>(errorMessage)
+        // Then
+        // Verify that each use case method was called
+        verify(trendingPersonUseCase, atLeastOnce()).getTrendingPerson()
+        verify(trendingPersonUseCase, atLeastOnce()).getTrendingMovies()
+        verify(trendingPersonUseCase, atLeastOnce()).getTrendingTvShow()
 
-         // Mocking method behavior
-         //`when`(trendingPersonUseCase.getTrendingPerson()).thenReturn(flowOf(expectedResource))
-         `when`(trendingPersonUseCase.getTrendingMovies(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
-         `when`(trendingPersonUseCase.getTrendingTvShow(BuildConfig.API_KEY)).thenReturn(flowOf(expectedResource))
+//        assertThat(personFlow, instanceOf(Flow::class.java))
+//        assertThat(trendingPersonViewModel.trendingPersonStateFlow, instanceOf(Flow::class.java))
 
-         // When
-         trendingPersonViewModel.getTrending(BuildConfig.API_KEY)
+        trendingPersonViewModel.trendingPersonStateFlow.test {
+            assertEquals(mockResult, awaitItem())
+        }
 
-         advanceUntilIdle()
-         // Then
-         //assertEquals(expectedResource, trendingPersonViewModel.trendingPersonStateFlow.value)
-         assertEquals(expectedResource, trendingPersonViewModel.trendingMoviesStateFlow.value)
-         assertEquals(expectedResource, trendingPersonViewModel.trendingTvShowStateFlow.value)
-     }*/
+    }
+
 }

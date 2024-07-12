@@ -96,6 +96,10 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.testImplementation)
+    testImplementation (libs.turbine)
+    testImplementation (libs.androidx.paging.common)
+
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

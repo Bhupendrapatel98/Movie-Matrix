@@ -28,18 +28,22 @@ google-services="4.4.2"
 firebase-bom="33.1.0"
 firebase-analytics = "22.0.1"
 ktlint= "12.1.1"
+assertj = "3.6.1"
+turbine = "0.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
 #Unit testing
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingRuntimeKtx" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
 
+testImplementation = {group = 'org.assertj', name = 'assertj-core', version.ref = 'assertj'}
 
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -87,6 +91,7 @@ room-ktx = {group="androidx.room",name="room-ktx",version.ref="room"}
 
 firebase-bom = {group="com.google.firebase",name="firebase-bom",version.ref="firebase-bom"}
 firebase-analytics = {group="com.google.firebase",name="firebase-analytics",version.ref="firebase-analytics"}
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
